@@ -1,27 +1,48 @@
+/* Extra small devices (phones, up to 480px) */
+
 body {
-  background: #333;
-  text-shadow: 1px 1px 1px #000;
-  color: #fff;
-  text-align: center;
+  background: #f7f7f7;
+}
+h1 {
+  margin: 0;
+  padding: 1em 0 0.25em;
 }
 a:hover {
   text-decoration: none;
+}
+img {
+  max-width: 90%;
 }
 .icon {
   vertical-align: middle;
 }
 #main {
-  position: fixed;
-  top: 50%;
-  margin-top: -100px;
-  width: 100%;
-  height: 200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  background: #fff;
+  text-align: center;
 }
+
+/* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-  h1 {
-    font-size: 64px;
+  #main {
+    max-width: 750px;
   }
   .icon {
     font-size: 20px;
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 922px) {
+  #main {
+    max-width: 970px;
+  }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  #main {
+    max-width: 1170px;
   }
 }
