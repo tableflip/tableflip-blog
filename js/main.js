@@ -1,3 +1,3 @@
 jQuery(function ($) {
-  $("#main").height($(window).height())
+  $("#main").css("min-height", $(window).height())
 })

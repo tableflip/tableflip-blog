@@ -3,23 +3,25 @@
 body {
   background: #f7f7f7;
 }
-h1 {
-  margin: 0;
-  padding: 1em 0 0.25em;
-}
 a:hover {
   text-decoration: none;
 }
 img {
   max-width: 90%;
 }
-.icon {
-  vertical-align: middle;
-}
 #main {
   margin: 0 auto;
   padding: 0 15px;
   background: #fff;
+  overflow: hidden;
+}
+#logo {
+  display: block;
+  text-align: center;
+  padding: 4em 0;
+}
+#ft {
+  margin: 4em 0 2em;
   text-align: center;
 }
 
