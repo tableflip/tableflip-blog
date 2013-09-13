@@ -6,8 +6,14 @@ body {
 a:hover {
   text-decoration: none;
 }
-img {
+#logo img {
   max-width: 90%;
+  -webkit-transition: -webkit-transform 0.05s ease-in-out;
+  transition: transform 0.05s ease-in-out;
+}
+#logo img:hover {
+  -webkit-transform: rotate(-20deg);
+  transform: rotate(-20deg);
 }
 #main {
   margin: 0 auto;
