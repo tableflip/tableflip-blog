@@ -24,7 +24,7 @@ A website and node module that helps to keep your node dependencies up to date.
 * https://david-dm.org/
 * https://github.com/alanshaw/david-www
 * https://github.com/alanshaw/david
-* https://npmjs.org/
+* https://npmjs.org/package/david
 
 ### Callout tiles
 
