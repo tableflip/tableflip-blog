@@ -16,5 +16,6 @@ node_modules
 
 .idea
 
-/content/tmp/*
-/content/data/*
+/content/tmp/**
+/content/data/**
+/content/images/**
