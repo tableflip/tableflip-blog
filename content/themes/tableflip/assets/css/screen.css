@@ -333,6 +333,10 @@ margin on the iframe, cause it breaks stuff. */
     margin: 0;
 }
 
+header + #nv {
+  margin-top: -2.5em;
+  position: relative;
+}
 #nv {
   text-align: center;
   background: #f6f6f6;
