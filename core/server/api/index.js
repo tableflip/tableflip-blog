@@ -3,7 +3,7 @@
 
 var _             = require('underscore'),
     when          = require('when'),
-    config        = require('.'),
+    config        = require('../config'),
     errors        = require('../errorHandling'),
     db            = require('./db'),
     settings      = require('./settings'),

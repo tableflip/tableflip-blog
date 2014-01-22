@@ -1,6 +1,6 @@
 var when      = require('when'),
     _         = require('underscore'),
-    migration = require('.'),
+    migration = require('../migration'),
     knex      = require('../../models/base').knex,
     schema    = require('../schema').tables,
 

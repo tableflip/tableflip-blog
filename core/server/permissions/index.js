@@ -3,7 +3,7 @@
 
 var _                   = require('underscore'),
     when                = require('when'),
-    Models              = require('.'),
+    Models              = require('../models'),
     objectTypeModelMap  = require('./objectTypeModelMap'),
     UserProvider        = Models.User,
     PermissionsProvider = Models.Permission,

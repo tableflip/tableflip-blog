@@ -11,10 +11,10 @@ var moment      = require('moment'),
     when        = require('when'),
 
     api         = require('../api'),
-    config      = require('.'),
+    config      = require('../config'),
     errors      = require('../errorHandling'),
-    filters     = require('../filters'),
-    coreHelpers = require('.'),
+    filters     = require('../../server/filters'),
+    coreHelpers = require('../helpers'),
 
     frontendControllers;
 

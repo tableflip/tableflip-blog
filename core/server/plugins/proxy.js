@@ -1,6 +1,6 @@
 var _           = require('underscore'),
     api         = require('../api'),
-    helpers     = require('.'),
+    helpers     = require('../helpers'),
     filters     = require('../filters');
 
 var proxy = {

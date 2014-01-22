@@ -1,4 +1,4 @@
-var migrations = require('.'),
+var migrations = require('../data/migration'),
     _          = require('underscore');
 
 module.exports = {

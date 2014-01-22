@@ -1,11 +1,11 @@
-var config        = require('.'),
+var config        = require('../config'),
     _             = require('underscore'),
     path          = require('path'),
     when          = require('when'),
     api           = require('../api'),
     mailer        = require('../mail'),
     errors        = require('../errorHandling'),
-    storage       = require('.'),
+    storage       = require('../storage'),
     updateCheck   = require('../update-check'),
 
     adminNavbar,

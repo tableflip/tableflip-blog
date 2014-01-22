@@ -5,7 +5,7 @@
 var _           = require('underscore'),
     express     = require('express'),
     busboy      = require('./ghost-busboy'),
-    config      = require('.'),
+    config      = require('../config'),
     path        = require('path'),
     api         = require('../api'),
 

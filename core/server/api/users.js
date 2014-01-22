@@ -1,6 +1,6 @@
 var when               = require('when'),
     _                  = require('underscore'),
-    dataProvider       = require('.'),
+    dataProvider       = require('../models'),
     settings           = require('./settings'),
     ONE_DAY            = 86400000,
     filteredAttributes = ['password', 'created_by', 'updated_by', 'last_login'],

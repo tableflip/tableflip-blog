@@ -1,4 +1,4 @@
-var dataProvider = require('.'),
+var dataProvider = require('../models'),
     tags;
 
 

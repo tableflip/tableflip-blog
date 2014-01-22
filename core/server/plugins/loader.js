@@ -3,7 +3,7 @@ var path = require('path'),
     _    = require('underscore'),
     when = require('when'),
     appProxy = require('./proxy'),
-    config = require('.'),
+    config = require('../config'),
     loader;
 
 

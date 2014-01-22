@@ -1,5 +1,5 @@
 var fs     = require('fs'),
-    config = require('../.'),
+    config = require('../../server/config'),
     /**
      * Create new Polyglot object
      * @type {Polyglot}

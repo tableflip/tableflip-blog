@@ -1,5 +1,5 @@
 var admin       = require('../controllers/admin'),
-    config      = require('.'),
+    config      = require('../config'),
     middleware  = require('../middleware').middleware;
 
 module.exports = function (server) {

@@ -1,6 +1,6 @@
 var when   = require('when'),
     _      = require('underscore'),
-    models = require('../.'),
+    models = require('../../models'),
     errors = require('../../errorHandling'),
     Importer000;
 

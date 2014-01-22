@@ -7,7 +7,7 @@ var downsize        = require('downsize'),
     when            = require('when'),
 
     api             = require('../api'),
-    config          = require('.'),
+    config          = require('../config'),
     errors          = require('../errorHandling'),
     filters         = require('../filters'),
     template        = require('./template'),

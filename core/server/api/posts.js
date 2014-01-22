@@ -1,7 +1,7 @@
 var when                   = require('when'),
     _                      = require('underscore'),
-    dataProvider           = require('.'),
-    permissions            = require('.'),
+    dataProvider           = require('../models'),
+    permissions            = require('../permissions'),
     canThis                = permissions.canThis,
     filteredUserAttributes = require('./users').filteredAttributes,
     posts;

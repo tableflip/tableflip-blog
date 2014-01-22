@@ -7,7 +7,7 @@ var _               = require('underscore'),
 
     defaultSettings = require('../default-settings'),
     Settings        = require('../../models/settings').Settings,
-    fixtures        = require('.'),
+    fixtures        = require('../fixtures'),
     schema          = require('../schema').tables,
 
     initialVersion  = '000',
