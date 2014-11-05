@@ -19,3 +19,5 @@ node_modules
 /content/tmp/**
 /content/data/**
 /content/images/**
+
+.DS_Store
