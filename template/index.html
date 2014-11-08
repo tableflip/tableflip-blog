@@ -12,10 +12,10 @@
     </div>
     <nav>
       <ul>
-        <li><a href="#about"><img src="img/icon-info.svg"><span>About</span></a></li>
-        <li><a href="#portfolio"><img src="img/icon-briefcase.svg"><span>Portfolio</span></a></li>
-        <li><a href="/blog"><img src="img/icon-blog.svg"><span>Blog</span></a></li>
-        <li><a href="/contact"><img src="img/icon-phone.svg"><span>Contact</span></a></li>
+        <li><a href="#about" title="About"><img src="img/icon-info.svg"><span>About</span></a></li>
+        <li><a href="#portfolio" title="Portfolio"><img src="img/icon-briefcase.svg"><span>Portfolio</span></a></li>
+        <li><a href="/blog" title="Blog"><img src="img/icon-blog.svg"><span>Blog</span></a></li>
+        <li><a href="/contact" title="Contact"><img src="img/icon-phone.svg"><span>Contact</span></a></li>
       </ul>
     </nav>
   </header>
@@ -30,6 +30,16 @@
     </ul>
   </div>
   <main>
+    <div class="container">
+      <a name="about"></a>
+      <h1>Test the ideas</h1>
+      <p>Ideas are king, but not all of them are royalty material.</p>
+      <p>Still, it's important to find out. You really don't know what kind of idea you've got until it's been tested. TABLEFLIP encourages a creative working relationship where all the things are tried out to see what works best.</p>
+    </div>
+
+    <section>
+    </section>
+
   </main>
   <footer>
     &copy; 2014 TABLEFLIP Ltd. • All rights reserved.
@@ -37,7 +47,9 @@
   <script>
   (function () {
     var html = document.getElementsByTagName('html')[0]
-    var scrolled = window.scrollTop > 0
+    var scrolled = false
+
+    setTimeout(function () { window.onscroll() })
 
     function addClass (el, className) {
       el.className = el.className.split(' ').concat(className).join(' ')
@@ -50,7 +62,7 @@
       }).join(' ')
     }
 
-    window.onscroll = function (e) {
+    window.onscroll = function () {
       if (window.scrollY > 0 && !scrolled) {
         addClass(html, 'scrolled')
         scrolled = true
