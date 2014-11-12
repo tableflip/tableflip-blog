@@ -16,7 +16,7 @@
         <li><a href="#about" title="About"><img src="img/icon-info.svg"><span>About</span></a></li>
         <li><a href="#portfolio" title="Portfolio"><img src="img/icon-briefcase.svg"><span>Portfolio</span></a></li>
         <li><a href="/blog" title="Blog"><img src="img/icon-blog.svg"><span>Blog</span></a></li>
-        <li><a href="/contact" title="Contact"><img src="img/icon-phone.svg"><span>Contact</span></a></li>
+        <li><a href="#contact" title="Contact"><img src="img/icon-phone.svg"><span>Contact</span></a></li>
       </ul>
     </nav>
   </header>
@@ -33,7 +33,7 @@
   <main>
 
     <a name="about"></a>
-    <section id="sec-about" class="section">
+    <div id="sec-about" class="section">
       <div class="container">
         <h1>Test the ideas</h1>
         <p><strong><em>Ideas are king, but not all of them are royalty material.</em></strong></p>
@@ -45,7 +45,7 @@
         <p>Stuff that doesn't work gets pruned and you're left with an awesome simple thing that does something new and interesting.</p>
         <p>What if you could ship a thing after a week? How about every week? Well, this is what tableflip does...and then you can change direction of the project, reprioritise, or continue with the plan.</p>
       </div>
-    </section>
+    </div>
 
     <a name="portfolio"></a>
     <div id="sec-portfolio" class="section">
@@ -53,9 +53,7 @@
         <h1>Portfolio</h1>
         <p>We build amazing websites and apps and things.</p>
         <p>Need help building something?</p>
-        <form action="/contact" method="get">
-          <button type="submit">&#8594; Get in touch</button>
-        </form>
+        <a href="#contact" class="btn">&#8594; Get in touch</a>
       </div>
     </div>
 
@@ -74,6 +72,19 @@
       </div>
     </div>
 
+    <a name="driift"></a>
+    <div id="piece-driift" class="piece light closed">
+      <div class="container">
+        <h2>DRIIFT</h2>
+        <p>Automated entry, realtime analytics and attendee insights all using the latest NFC + Beacon technologies.</p>
+        <div class="full">
+          <p>In collaboration with Chris Waring of wwaves, TABLEFLIP took their Meteor knowledge and built a web and NFC based solution for conferences and festivals to gain insight and info on their event, in realtime.</p>
+          <p>[DRIIFT](http://signup.driift.io/) provides all sorts of awesomes that allow attendees to have more fun and make more connections, sponsors to gather more leads and get their name out better, and organisers to get info on how their event went, where people were and what they were doing.</p>
+          <p>DRIIFT is built as a Meteor web application and a Cordova phone app. It uses the latest NFC technology at it's base. We've been seen at tech events such as [bacon conf](http://devslovebacon.com/), [LXJS](http://2014.lxjs.org/) and [Container Camp](http://container.camp/).</p>
+        </div>
+      </div>
+    </div>
+
     <a name="intimate-objects"></a>
     <div id="piece-intimate-objects" class="piece dark closed">
       <div class="container">
@@ -81,6 +92,18 @@
         <p>TABLEFLIP were comissioned by Intimate Objects to build a website and CMS allowing visitors to design, create and share intimate objects with each other.</p>
         <div class="full">
           <p>The site uses the [KeystoneJS](http://keystonejs.com/) CMS and shows off some incredible 3D graphics made possible using [three.js](http://threejs.org/).</p>
+        </div>
+      </div>
+    </div>
+
+    <a name="nodeschool"></a>
+    <div id="piece-nodeschool" class="piece light closed">
+      <div class="container">
+        <h2>NodeSchool</h2>
+        <p>TABLEFLIP have helped run and mentor at NodeSchool in London since the concept was first devised.</p>
+        <div class="full">
+          <p>We built the [London chapter site](http://nodeschool.io/london/) and can be regularly seen helping others on the [NodeSchool discussion forums](https://github.com/nodeschool/discussions/).
+          <p>Our workshop "Nodebot Workshop" is a featured elective on the [NodeSchool website](http://nodeschool.io/).</p>
         </div>
       </div>
     </div>
@@ -119,6 +142,30 @@
         </div>
       </div>
     </div>
+
+    <a name="contact"></a>
+    <div id="sec-contact" class="section">
+      <div class="container">
+        <h1>Contact</h1>
+        <ul id="mugshots">  
+          <li><a href="https://github.com/alanshaw"><img src="https://en.gravatar.com/avatar/8ca838dbb449a1359b5a4eadd26abb42"></a></li>
+          <li><a href="https://github.com/olizilla"><img src="https://en.gravatar.com/avatar/1114a99d8da01f890f39c02bd2b1bfc3"></a></li>
+        </ul>
+        <p>Get in contact with us for any reason. Fire an email to <a href="mailto:hello@tableflip.io">hello@tableflip.io</a> and we'll mail you back as soon as we can.</p>
+        <p><a href="mailto:hello@tableflip.io" class="btn">&#8594; Email us</a></p>
+      </div>
+    </div>
+
+    <a name="address"></a>
+    <div id="sec-address" class="section">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2485.7772475944635!2d-0.06762329999995409!3d51.46224610000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487603bcd574cb6b%3A0x7ff8ee0aab796340!2s1a%2C+1+E+Dulwich+Rd%2C+London+SE15!5e0!3m2!1sen!2suk!4v1415827434779" frameborder="0" style="border:0"></iframe>
+      <div class="container vcard">
+        <p class="adr"><strong>Address:</strong> <span class="street-address">Unit 1a, 1 East Dulwich Road</span>, <span class="locality">London</span>, <span class="postal-code">SE22 9BA</span></p>
+        <p><a href="https://www.google.co.uk/maps/place/1+E+Dulwich+Rd,+London+SE15/@51.4622542,-0.0675658,17z/data=!4m7!1m4!3m3!1s0x487603bcd574cb6b:0x275451ab9158a674!2s1+E+Dulwich+Rd,+London+SE15!3b1!3m1!1s0x487603bcd574cb6b:0x275451ab9158a674" class="btn" target="_blank">&#8594; View on Google Maps</a></p>
+      </div>
+    </div>
+
+    
 
   </main>
   <footer>
