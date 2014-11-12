@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>TABLEFLIP - we build websites, apps, robots and communities</title>
+<link href="http://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
 <link rel="stylesheet" href="main.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
     </nav>
   </header>
   <div id="hero">
-    <img src="img/hero0.jpg" alt="NodeSchool at SINFO">
+    <img class="layer" data-depth="0.00" src="img/hero0.jpg" alt="NodeSchool at SINFO">
     <ul id="we-build">
       <li><span>We Build</span></li>
       <li><span>Websites</span></li>
@@ -30,15 +31,49 @@
     </ul>
   </div>
   <main>
-    <div class="container">
-      <a name="about"></a>
-      <h1>Test the ideas</h1>
-      <p>Ideas are king, but not all of them are royalty material.</p>
-      <p>Still, it's important to find out. You really don't know what kind of idea you've got until it's been tested. TABLEFLIP encourages a creative working relationship where all the things are tried out to see what works best.</p>
+
+    <a name="about"></a>
+    <section id="sec-about" class="section">
+      <div class="container">
+        <h1>Test the ideas</h1>
+        <p><strong><em>Ideas are king, but not all of them are royalty material.</em></strong></p>
+        <p>Still, it's important to find out. You really don't know what kind of idea you've got until it's been tested. TABLEFLIP encourages a creative working relationship where all the things are tried out to see what works best.</p>
+        <blockquote>
+          <p>The only way of discovering the limits of the possible is to venture a little way past them into the impossible.</p>
+          <p>Arthur C. Clarke, "Profiles of The Future", 1961</p>
+        </blockquote>
+        <p>Stuff that doesn't work gets pruned and you're left with an awesome simple thing that does something new and interesting.</p>
+        <p>What if you could ship a thing after a week? How about every week? Well, this is what tableflip does...and then you can change direction of the project, reprioritise, or continue with the plan.</p>
+      </div>
+    </section>
+
+    <a name="portfolio"></a>
+    <div id="sec-portfolio" class="section">
+      <div class="container">
+        <h1>Portfolio</h1>
+        <p>We build amazing websites and apps and things.</p>
+        <p>Need help building something?</p>
+        <form action="/contact" method="get">
+          <button type="submit">&#8594; Get in touch</button>
+        </form>
+      </div>
     </div>
 
-    <section>
-    </section>
+    <a name="nodebots"></a>
+    <div id="piece-nodebots" class="piece closed">
+      <div class="container">
+        <h2>NodeBots</h2>
+        <p>TABLEFLIP have co-organised the nodebots meetup since mid 2013.</p>
+        <div class="full">
+          <p>TABLEFLIP jointly built the `nodebot-workshop` a commmand line based workshop designed to get people up and running with the de facto Node.js library for communicating with hardware: `johnny-five` through a series of code challenges that make use of hardware components commonly used by hardware enthusiasts. TABLEFLIP also built the new [nodebots website](http://nodebots.io/).</p>
+
+          <p>TABLEFLIP were invited to [NodeConf](http://nodeconf.com/) 2014 in San Francisco to run the hardware workshop.</p>
+
+          <p>For NodeBots day 2014, TABLEFLIP collaborated with Alex Potsides to produce an extra special meetup where attendees could buy and build their own bluetooth powered, laser cut robot vehicles.</p>
+        </div>
+        <a class="open-arrow" href="#"><img src="img/icon-arrow-down-dark.svg"></a>
+      </div>
+    </div>
 
   </main>
   <footer>
@@ -71,6 +106,13 @@
         scrolled = false
       }
     }
+
+    var pieces = document.querySelector('.piece')
+    pieces.addEventListener('click', function (e) {
+      if (e.currentTarget.className == 'piece closed') {
+        e.currentTarget.className = 'piece open'
+      }
+    })
   })()
   </script>
 </body>

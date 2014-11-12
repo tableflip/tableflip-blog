@@ -11,14 +11,26 @@
 
 }
 body {
-  font-family: Helvetica Neue, Helvetica, sans-serif;
+  /*font-family: Helvetica Neue, Helvetica, sans-serif;*/
+  font-family: "Noto Serif", serif;
+  font-size: 20px;
   margin: 0;
   background: #f7f7f7 url(img/tesselate.svg);
   background-size: 10% auto;
   color: #4A4A4A;
 }
 h1 {
-  font-family: varela_roundregular, sans-serif;
+  /*font-family: varela_roundregular, sans-serif;*/
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-size: 36px;
+}
+h2 {
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-size: 30px;
+  margin: 20px 0;
+}
+h1:first-child {
+  margin-top: 0;
 }
 a, a:visited {
   color: #4A4A4A;
@@ -28,7 +40,38 @@ a:hover {
 }
 a[name] {
   position: relative;
-  top: -60px;
+  top: -30px;
+}
+blockquote {
+  box-sizing: border-box;
+  margin: 1.6em 0;
+  padding: 0 0 0 1.6em;
+  border-left: 0.4em solid #50E3C2;
+}
+blockquote p {
+  font-style: italic;
+}
+button {
+  display: inline-block;
+  font-family: "Noto Serif", serif;
+  font-size: 24px;
+  color: #fff;
+  background: #E74C3C;
+  border: 0;
+  border-bottom: 5px solid #DB4334;
+  border-radius: 2px;
+  box-shadow: 0 0 2px #ccc;
+  padding: 3px 15px;
+  cursor: pointer;
+  transition: box-shadow 0.25s linear;
+}
+button:hover {
+  box-shadow: 0 0 5px #DB4334;
+}
+button:active {
+  box-shadow: 0 0 4px #444 inset;
+  border: 0;
+  padding: 3px 15px 8px;
 }
 header {
   position: fixed;
@@ -74,7 +117,9 @@ header {
 }
 nav {
   background: #fff;
-  padding: 20px 0;
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 18px 0;
   transition: box-shadow 0.25s ease-out;
 }
 .scrolled nav {
@@ -134,7 +179,6 @@ nav a img {
   #hero img {
     width: 100%;
     max-height: 1000px;
-    box-shadow: 0 0 5px #999;
     display: block;
   }
 }
@@ -190,17 +234,71 @@ nav a img {
 main {
   min-height: 1000px;
 }
-section {
-  margin: 30px 0;
-  min-height: 100px;
-  background: #18C8A0;
-  border-top: 4px solid #50E3C2;
-  border-bottom: 4px solid #50E3C2;
+.section {
+}
+
+#sec-about {
+  background: #18C8A0 url(img/IMG_0618.jpg) no-repeat scroll center center;
+  background-size: cover;
+}
+#sec-about h1, #sec-about blockquote p, #sec-about strong {
+  color: #fff;
+}
+#sec-about p {
+  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#sec-portfolio {
+  text-align: center;
+}
+
+.piece .container {
+  height: 152px;
+  transition: all 0.25s;
+}
+.piece .open-arrow {
+  display: block;
+  text-align: center;
+}
+.piece.open .open-arrow {
+  display: none;
+}
+.piece.open .container {
+  height: 500px;
+}
+.piece.closed .container {
+  padding: 30px 15px;
+}
+.piece.closed {
+  cursor: pointer;
+}
+.piece.closed .open-arrow img {
+  position: relative;
+  top: 0;
+  margin: -20px 0;
+  height: 40px;
+  transition: all 0.25s;
+}
+.piece.closed:hover .open-arrow img {
+  top: 5px;
+}
+.piece.open .container {
+  padding: 100px 15px;
+}
+
+
+#piece-nodebots {
+  background: #F8E01E url(img/bg-piece-nodebots.jpg) no-repeat scroll center center;
+  background-size: cover;
 }
 .container {
-  margin: 15px auto;
-  padding: 0 15px;
-  max-width: 960px;
+  margin: 0 auto;
+  padding: 100px 15px;
+  max-width: 700px;
+}
+.container:first-child {
+  margin-top: 0;
 }
 footer {
   background: #fff;
