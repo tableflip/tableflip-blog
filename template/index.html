@@ -60,18 +60,63 @@
     </div>
 
     <a name="nodebots"></a>
-    <div id="piece-nodebots" class="piece closed">
+    <div id="piece-nodebots" class="piece dark closed">
       <div class="container">
         <h2>NodeBots</h2>
         <p>TABLEFLIP have co-organised the nodebots meetup since mid 2013.</p>
         <div class="full">
-          <p>TABLEFLIP jointly built the `nodebot-workshop` a commmand line based workshop designed to get people up and running with the de facto Node.js library for communicating with hardware: `johnny-five` through a series of code challenges that make use of hardware components commonly used by hardware enthusiasts. TABLEFLIP also built the new [nodebots website](http://nodebots.io/).</p>
+          <p>TABLEFLIP jointly built the <code>nodebot-workshop</code> a commmand line based workshop designed to get people up and running with the de facto Node.js library for communicating with hardware: `johnny-five` through a series of code challenges that make use of hardware components commonly used by hardware enthusiasts. TABLEFLIP also built the new [nodebots website](http://nodebots.io/).</p>
 
           <p>TABLEFLIP were invited to [NodeConf](http://nodeconf.com/) 2014 in San Francisco to run the hardware workshop.</p>
 
           <p>For NodeBots day 2014, TABLEFLIP collaborated with Alex Potsides to produce an extra special meetup where attendees could buy and build their own bluetooth powered, laser cut robot vehicles.</p>
         </div>
-        <a class="open-arrow" href="#"><img src="img/icon-arrow-down-dark.svg"></a>
+      </div>
+    </div>
+
+    <a name="intimate-objects"></a>
+    <div id="piece-intimate-objects" class="piece dark closed">
+      <div class="container">
+        <h2>Intimate Objects</h2>
+        <p>TABLEFLIP were comissioned by Intimate Objects to build a website and CMS allowing visitors to design, create and share intimate objects with each other.</p>
+        <div class="full">
+          <p>The site uses the [KeystoneJS](http://keystonejs.com/) CMS and shows off some incredible 3D graphics made possible using [three.js](http://threejs.org/).</p>
+        </div>
+      </div>
+    </div>
+
+    <a name="polestar"></a>
+    <div id="piece-polestar" class="piece light closed">
+      <div class="container">
+        <h2>Polestar</h2>
+        <p>TABLEFLIP worked extensively with Polestar on their flagship application Purplefinder.</p>
+        <div class="full">
+          <p>[Polestar Space Applications](http://www.polestarglobal.com/) primarily allow their customers to track and monitor their fleet through various web and mobile applications. TABLEFLIP worked extensively with Polestar on their flagship application Purplefinder.</p>
+
+          <p>TABLEFLIP was tasked with re-skining their aging Java applet based web application to give it a new lease of life. We worked closely with the backend team to integrate a new look and feel and port the features of the applet to a new, modern, [LeafletJS](http://leafletjs.com/) based map. We made use of the latest web technologies such as websockets and CSS3 animations whilst also ensuring the application was useable on mobile devices.</p>
+
+          <p>TABLEFLIP also built their main website and their newest product to hit the financial market [PurpleTRAC](http://purpletrac.polestarglobal.com/trade-and-commodity-finance/what-is-purpletrac).</p>
+        </div>
+      </div>
+    </div>
+
+    <a name="meteor"></a>
+    <div id="piece-meteor" class="piece light closed">
+      <div class="container">
+        <h2>Meteor</h2>
+        <p>TABLEFLIP and friends organise the monthly Meteor London meetup.</p>
+        <div class="full">
+          <p>Meteor have contracted TABLEFLIP on a number of occasions to build various internal as well as external projects. Our most recent collaboration was on the "Meteor Now" campaign website, which aimed to raise $25,000 for [CodeNow](http://codenow.org/) - a nonprofit focused on teaching under-represented youth to code.</p>
+
+          <p>TABLEFLIP recently started running [Meteor training](http://www.meteorlondon.com/) for javascript developers and beginners, aiming to introduce building web apps with Meteor.</p>
+
+          <p>The first training day was a great success, we had around 10 students and also teamed up with [Ladies who Code](http://www.ladieswhocode.com/) to offer a scholorship place.</p>
+
+          <blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/_alanshaw">@_alanshaw</a> &amp; <a href="https://twitter.com/olizilla">@olizilla</a> were a great double act, and incredibly patient with all my questions.</p>&mdash; Olu Niyi-Awosusi (@oluoluoxenfree) <a href="https://twitter.com/oluoluoxenfree/status/528292337873850368">October 31, 2014</a></blockquote>
+          <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+          <p>In October 2014 Meteor released the long awaited version 1.0 of the framework and with it redesigned their logo and website. TABLEFLIP were pleasantly surprised to find themselves featured on the [Professional Services](https://www.meteor.com/professional-services) page of the site.</p>
+        </div>
       </div>
     </div>
 
@@ -107,11 +152,14 @@
       }
     }
 
-    var pieces = document.querySelector('.piece')
-    pieces.addEventListener('click', function (e) {
-      if (e.currentTarget.className == 'piece closed') {
-        e.currentTarget.className = 'piece open'
-      }
+    var pieces = document.querySelectorAll('.piece')
+
+    ;[].forEach.call(pieces, function (piece) {
+      piece.addEventListener('click', function (e) {
+        if (piece.className.indexOf('closed') > -1) {
+          piece.className = piece.className.replace('closed', 'open')
+        }
+      })
     })
   })()
   </script>

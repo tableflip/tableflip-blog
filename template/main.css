@@ -29,7 +29,7 @@ h2 {
   font-size: 30px;
   margin: 20px 0;
 }
-h1:first-child {
+h1:first-child, p:first-child {
   margin-top: 0;
 }
 a, a:visited {
@@ -253,9 +253,35 @@ main {
   text-align: center;
 }
 
-.piece .container {
-  height: 152px;
+
+.piece.light h2, .piece.light blockquote p, .piece.light strong {
+  color: #fff;
+}
+.piece.light p {
+  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
+}
+.piece.closed::after {
+  content: "";
+  display: block;
+  position: relative;
+  top: 0;
+  margin: -50px 0 0;
+  padding-bottom: 30px;
+  background: transparent url(img/icon-arrow-down-dark.svg) no-repeat scroll center center;
+  background-size: auto 40px;
+  height: 40px;
   transition: all 0.25s;
+}
+.piece.closed.light::after {
+  background-image: url(img/icon-arrow-down-light.svg);
+}
+.piece.closed:hover::after {
+  top: 5px;
+}
+.piece .full {
+  overflow: hidden;
+  transition: all 0.25s ease-out;
 }
 .piece .open-arrow {
   display: block;
@@ -265,7 +291,9 @@ main {
   display: none;
 }
 .piece.open .container {
-  height: 500px;
+  padding: 100px 15px;
+}
+.piece.open .container {
 }
 .piece.closed .container {
   padding: 30px 15px;
@@ -273,18 +301,11 @@ main {
 .piece.closed {
   cursor: pointer;
 }
-.piece.closed .open-arrow img {
-  position: relative;
-  top: 0;
-  margin: -20px 0;
-  height: 40px;
-  transition: all 0.25s;
+.piece.closed .full {
+  height: 0;
 }
-.piece.closed:hover .open-arrow img {
-  top: 5px;
-}
-.piece.open .container {
-  padding: 100px 15px;
+.piece.open .full {
+  height: 500px;
 }
 
 
@@ -292,6 +313,20 @@ main {
   background: #F8E01E url(img/bg-piece-nodebots.jpg) no-repeat scroll center center;
   background-size: cover;
 }
+#piece-meteor {
+  background: #000 url(img/bg-piece-meteor.jpg) no-repeat scroll center center;
+  background-size: cover;
+}
+#piece-polestar {
+  background: #51346D url(img/bg-piece-polestar.jpg) no-repeat scroll center center;
+  background-size: cover;
+}
+#piece-intimate-objects {
+  background: #fff url(img/bg-piece-io.jpg) no-repeat scroll center center;
+  background-size: cover;
+}
+
+
 .container {
   margin: 0 auto;
   padding: 100px 15px;
