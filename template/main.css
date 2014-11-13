@@ -340,8 +340,14 @@ main {
   height: 0;
 }
 .piece.open .full {
-  height: 500px;
+  height: auto;
 }
+@media (min-width: 720px) {
+  .piece.open .full {
+    height: 500px;
+  }
+}
+
 
 
 #piece-nodebots {
