@@ -287,6 +287,12 @@ main {
   color: #fff;
   color: rgba(255, 255, 255, 0.9);
 }
+.piece.light a {
+  color: #fff;
+}
+.piece.dark a {
+  color: #4A4A4A;
+}
 .piece.closed::after {
   content: "";
   display: block;
@@ -342,6 +348,12 @@ main {
 #piece-meteor {
   background: #000 url(img/bg-piece-meteor.jpg) no-repeat scroll center center;
   background-size: cover;
+}
+#piece-meteor.open .full {
+  height: 800px;
+}
+#piece-meteor.open .full iframe {
+  margin: 30px auto !important;
 }
 #piece-polestar {
   background: #51346D url(img/bg-piece-polestar.jpg) no-repeat scroll center center;
