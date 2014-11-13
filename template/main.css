@@ -11,7 +11,6 @@
 
 }
 body {
-  /*font-family: Helvetica Neue, Helvetica, sans-serif;*/
   font-family: "Noto Serif", serif;
   font-size: 20px;
   margin: 0;
@@ -20,7 +19,6 @@ body {
   color: #4A4A4A;
 }
 h1 {
-  /*font-family: varela_roundregular, sans-serif;*/
   font-family: Helvetica Neue, Helvetica, sans-serif;
   font-size: 36px;
 }
@@ -172,27 +170,27 @@ nav a img {
 #hero {
   position: relative;
   margin-top: 60px;
-}
-#hero img {
-  display: none;
+  background: #fff url(img/bg-hero-sm.jpg) no-repeat scroll center center;
+  background-size: cover;
+  height: 300px;
 }
 @media (min-width: 720px) {
-  #hero img {
-    width: 100%;
-    max-height: 1000px;
-    display: block;
+  #hero {
+    background-image: url(img/bg-hero.jpg);
+    height: 500px;
   }
 }
 #we-build {
-  margin: 200px 0 0 10px;
+  margin: -74px 0 0 -152px;
   padding: 0;
   list-style-type: none;
+  position: absolute;
+  top: 200px;
+  left: 50%;
 }
 @media (min-width: 720px) {
   #we-build {
-    position: absolute;
     top: 200px;
-    left: 50%;
     margin: 0 0 0 -120px;
   }
 }
@@ -246,8 +244,13 @@ main {
 }
 
 #sec-about {
-  background: #18C8A0 url(img/IMG_0618.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #18C8A0;
+}
+@media (min-width: 720px) {
+  #sec-about {
+    background: #18C8A0 url(img/bg-about.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
 }
 #sec-about h1, #sec-about blockquote p, #sec-about strong {
   color: #fff;
@@ -342,12 +345,10 @@ main {
 
 
 #piece-nodebots {
-  background: #F8E01E url(img/bg-piece-nodebots.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #F8E01E;
 }
 #piece-meteor {
-  background: #000 url(img/bg-piece-meteor.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #000;
 }
 #piece-meteor.open .full {
   height: 800px;
@@ -356,20 +357,42 @@ main {
   margin: 30px auto !important;
 }
 #piece-polestar {
-  background: #51346D url(img/bg-piece-polestar.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #51346D;
 }
 #piece-intimate-objects {
-  background: #fff url(img/bg-piece-io.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #fff;
 }
 #piece-driift {
-  background: #1f6385 url(img/bg-piece-driift.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #1f6385;
 }
 #piece-nodeschool {
-  background: #f45340 url(img/bg-piece-nodeschool.jpg) no-repeat scroll center center;
-  background-size: cover;
+  background: #f45340;
+}
+@media (min-width: 720px) {
+  #piece-nodebots {
+    background: #F8E01E url(img/bg-piece-nodebots.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
+  #piece-meteor {
+    background: #000 url(img/bg-piece-meteor.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
+  #piece-polestar {
+    background: #51346D url(img/bg-piece-polestar.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
+  #piece-intimate-objects {
+    background: #fff url(img/bg-piece-io.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
+  #piece-driift {
+    background: #1f6385 url(img/bg-piece-driift.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
+  #piece-nodeschool {
+    background: #f45340 url(img/bg-piece-nodeschool.jpg) no-repeat scroll center center;
+    background-size: cover;
+  }
 }
 
 #mugshots {
