@@ -1,5 +1,5 @@
 var when          = require('when'),
-    _             = require('underscore'),
+    _             = require('lodash'),
 
     defaults;
 
@@ -25,9 +25,14 @@ var Filters = function () {
 
 // Register a new filter callback function
 Filters.prototype.registerFilter = function (name, priority, fn) {
-    // Curry the priority optional parameter to a default of 5
+    // Carry the priority optional parameter to a default of 5
     if (_.isFunction(priority)) {
         fn = priority;
+        priority = null;
+    }
+
+    // Null priority should be set to default
+    if (priority === null) {
         priority = defaults.filterPriority;
     }
 
@@ -38,7 +43,7 @@ Filters.prototype.registerFilter = function (name, priority, fn) {
 };
 
 // Unregister a filter callback function
-Filters.prototype.unregisterFilter = function (name, priority, fn) {
+Filters.prototype.deregisterFilter = function (name, priority, fn) {
     // Curry the priority optional parameter to a default of 5
     if (_.isFunction(priority)) {
         fn = priority;
@@ -53,7 +58,7 @@ Filters.prototype.unregisterFilter = function (name, priority, fn) {
 };
 
 // Execute filter functions in priority order
-Filters.prototype.doFilter = function (name, args) {
+Filters.prototype.doFilter = function (name, args, context) {
     var callbacks = this.filterCallbacks[name],
         priorityCallbacks = [];
 
@@ -66,13 +71,20 @@ Filters.prototype.doFilter = function (name, args) {
     _.times(defaults.maxPriority + 1, function (priority) {
         // Add a function that runs its priority level callbacks in a pipeline
         priorityCallbacks.push(function (currentArgs) {
+            var callables;
+
             // Bug out if no handlers on this priority
             if (!_.isArray(callbacks[priority])) {
                 return when.resolve(currentArgs);
             }
 
+            callables = _.map(callbacks[priority], function (callback) {
+                return function (args) {
+                    return callback(args, context);
+                };
+            });
             // Call each handler for this priority level, allowing for promises or values
-            return when.pipeline(callbacks[priority], currentArgs);
+            return when.pipeline(callables, currentArgs);
         });
     });
 

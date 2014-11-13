@@ -1,26 +1,23 @@
-var Post,
-    Posts,
-    _ = require('underscore'),
-    uuid = require('node-uuid'),
-    when = require('when'),
-    errors = require('../errorHandling'),
-    Showdown = require('showdown'),
-    github = require('../../shared/vendor/showdown/extensions/github'),
-    converter = new Showdown.converter({extensions: [github]}),
-    User = require('./user').User,
-    Tag = require('./tag').Tag,
-    Tags = require('./tag').Tags,
-    ghostBookshelf = require('./base');
+// # Post Model
+var _              = require('lodash'),
+    uuid           = require('node-uuid'),
+    when           = require('when'),
+    errors         = require('../errors'),
+    Showdown       = require('showdown'),
+    ghostgfm       = require('../../shared/lib/showdown/extensions/ghostgfm'),
+    converter      = new Showdown.converter({extensions: [ghostgfm]}),
+    Tag            = require('./tag').Tag,
+    Tags           = require('./tag').Tags,
+    User           = require('./user').User,
+    ghostBookshelf = require('./base'),
+    xmlrpc         = require('../xmlrpc'),
+
+    Post,
+    Posts;
 
 Post = ghostBookshelf.Model.extend({
 
     tableName: 'posts',
-
-    permittedAttributes: [
-        'id', 'uuid', 'title', 'slug', 'markdown', 'html', 'meta_title', 'meta_description',
-        'featured', 'image', 'status', 'language', 'author_id', 'created_at', 'created_by', 'updated_at', 'updated_by',
-        'page', 'published_at', 'published_by'
-    ],
 
     defaults: function () {
         return {
@@ -30,24 +27,40 @@ Post = ghostBookshelf.Model.extend({
     },
 
     initialize: function () {
-        this.on('creating', this.creating, this);
-        this.on('saving', this.updateTags, this);
-        this.on('saving', this.saving, this);
-        this.on('saving', this.validate, this);
-    },
+        var self = this;
 
-    validate: function () {
-        ghostBookshelf.validator.check(this.get('title'), "Post title cannot be blank").notEmpty();
-        ghostBookshelf.validator.check(this.get('title'), 'Post title maximum length is 150 characters.').len(0, 150);
-        return true;
+        ghostBookshelf.Model.prototype.initialize.apply(this, arguments);
+
+        this.on('saved', function (model, attributes, options) {
+            if (model.get('status') === 'published') {
+                xmlrpc.ping(model.attributes);
+            }
+            return self.updateTags(model, attributes, options);
+        });
     },
 
     saving: function (newPage, attr, options) {
-        /*jslint unparam:true*/
-        var self = this;
+        /*jshint unused:false*/
+        var self = this,
+            tagsToCheck,
+            i;
 
-        // Remove any properties which don't belong on the post model
-        this.attributes = this.pick(this.permittedAttributes);
+        options = options || {};
+        // keep tags for 'saved' event and deduplicate upper/lowercase tags
+        tagsToCheck = this.get('tags');
+        this.myTags = [];
+
+        _.each(tagsToCheck, function (item) {
+            for (i = 0; i < self.myTags.length; i = i + 1) {
+                if (self.myTags[i].name.toLocaleLowerCase() === item.name.toLocaleLowerCase()) {
+                    return;
+                }
+            }
+
+            self.myTags.push(item);
+        });
+
+        ghostBookshelf.Model.prototype.saving.call(this, newPage, attr, options);
 
         this.set('html', converter.makeHtml(this.get('markdown')));
 
@@ -55,360 +68,527 @@ Post = ghostBookshelf.Model.extend({
         //this.set('title', this.sanitize('title').trim());
         this.set('title', this.get('title').trim());
 
-        if (this.hasChanged('status') && this.get('status') === 'published') {
+        if ((this.hasChanged('status') || !this.get('published_at')) && this.get('status') === 'published') {
             if (!this.get('published_at')) {
                 this.set('published_at', new Date());
             }
             // This will need to go elsewhere in the API layer.
-            this.set('published_by', 1);
+            if (!this.get('published_by')) {
+                this.set('published_by', this.contextUser(options));
+            }
         }
 
-        ghostBookshelf.Model.prototype.saving.call(this);
-
-        if (this.hasChanged('slug')) {
+        if (this.hasChanged('slug') || !this.get('slug')) {
             // Pass the new slug through the generator to strip illegal characters, detect duplicates
-            return ghostBookshelf.Model.generateSlug(Post, this.get('slug'), {status: 'all', transacting: options.transacting})
+            return ghostBookshelf.Model.generateSlug(Post, this.get('slug') || this.get('title'),
+                    {status: 'all', transacting: options.transacting})
                 .then(function (slug) {
                     self.set({slug: slug});
                 });
         }
+
     },
 
     creating: function (newPage, attr, options) {
-        /*jslint unparam:true*/
+        /*jshint unused:false*/
+        options = options || {};
+
         // set any dynamic default properties
-        var self = this;
-
         if (!this.get('author_id')) {
-            this.set('author_id', 1);
+            this.set('author_id', this.contextUser(options));
         }
 
-        ghostBookshelf.Model.prototype.creating.call(this);
-
-        // We require a slug be set when creating a new post
-        // as the database doesn't allow null slug values.
-        if (!this.get('slug')) {
-            // Generating a slug requires a db call to look for conflicting slugs
-            return ghostBookshelf.Model.generateSlug(Post, this.get('title'), {status: 'all', transacting: options.transacting})
-                .then(function (slug) {
-                    self.set({slug: slug});
-                });
-        }
+        ghostBookshelf.Model.prototype.creating.call(this, newPage, attr, options);
     },
 
-    updateTags: function (newTags, attr, options) {
-        /*jslint unparam:true*/
+   /**
+     * ### updateTags
+     * Update tags that are attached to a post.  Create any tags that don't already exist.
+     * @param {Object} newPost
+     * @param {Object} attr
+     * @param {Object} options
+     * @return {Promise(ghostBookshelf.Models.Post)} Updated Post model
+     */
+    updateTags: function (newPost, attr, options) {
         var self = this;
         options = options || {};
 
-
-        if (newTags === this) {
-            newTags = this.get('tags');
-        }
-
-        if (!newTags || !this.id) {
+        if (!this.myTags) {
             return;
         }
 
-        return Post.forge({id: this.id}).fetch({withRelated: ['tags'], transacting: options.transacting}).then(function (thisPostWithTags) {
+        return Post.forge({id: newPost.id}).fetch({withRelated: ['tags'], transacting: options.transacting}).then(function (post) {
+            var tagOps = [];
 
-            var existingTags = thisPostWithTags.related('tags').toJSON(),
-                tagOperations = [],
-                tagsToDetach = [],
-                tagsToAttach = [];
+            // remove all existing tags from the post
+            // _.omit(options, 'query') is a fix for using bookshelf 0.6.8
+            // (https://github.com/tgriesser/bookshelf/issues/294)
+            tagOps.push(post.tags().detach(null, _.omit(options, 'query')));
 
-            // First find any tags which have been removed
-            _.each(existingTags, function (existingTag) {
-                if (!_.some(newTags, function (newTag) { return newTag.name === existingTag.name; })) {
-                    tagsToDetach.push(existingTag.id);
-                }
-            });
-
-            if (tagsToDetach.length > 0) {
-                tagOperations.push(self.tags().detach(tagsToDetach, options));
+            if (_.isEmpty(self.myTags)) {
+                return when.all(tagOps);
             }
 
-            // Next check if new tags are all exactly the same as what is set on the model
-            _.each(newTags, function (newTag) {
-                if (!_.some(existingTags, function (existingTag) { return newTag.name === existingTag.name; })) {
-                    // newTag isn't on this post yet
-                    tagsToAttach.push(newTag);
-                }
-            });
+            return Tags.forge().query('whereIn', 'name', _.pluck(self.myTags, 'name')).fetch(options).then(function (existingTags) {
+                var doNotExist = [],
+                    createAndAttachOperation;
 
-            if (!_.isEmpty(tagsToAttach)) {
-                return Tags.forge().query('whereIn', 'name', _.pluck(tagsToAttach, 'name')).fetch(options).then(function (matchingTags) {
-                    _.each(matchingTags.toJSON(), function (matchingTag) {
-                        tagOperations.push(self.tags().attach(matchingTag.id, options));
-                        tagsToAttach = _.reject(tagsToAttach, function (tagToAttach) {
-                            return tagToAttach.name === matchingTag.name;
-                        });
+                existingTags = existingTags.toJSON();
+
+                doNotExist = _.reject(self.myTags, function (tag) {
+                    return _.any(existingTags, function (existingTag) {
+                        return existingTag.name === tag.name;
                     });
-
-                    _.each(tagsToAttach, function (tagToCreateAndAttach) {
-                        var createAndAttachOperation,
-                            opt = options.method;
-                        //TODO: remove when refactor; ugly fix to overcome bookshelf
-                        options.method = 'insert';
-                        createAndAttachOperation = Tag.add({name: tagToCreateAndAttach.name}, options).then(function (createdTag) {
-                            options.method = opt;
-                            return self.tags().attach(createdTag.id, createdTag.name, options);
-                        });
-
-
-                        tagOperations.push(createAndAttachOperation);
-                    });
-
-                    return when.all(tagOperations);
                 });
-            }
 
-            return when.all(tagOperations);
+                // Create tags that don't exist and attach to post
+                _.each(doNotExist, function (tag) {
+                    createAndAttachOperation = Tag.add({name: tag.name}, options).then(function (createdTag) {
+                        createdTag = createdTag.toJSON();
+                        // _.omit(options, 'query') is a fix for using bookshelf 0.6.8
+                        // (https://github.com/tgriesser/bookshelf/issues/294)
+                        return post.tags().attach(createdTag.id, createdTag.name, _.omit(options, 'query'));
+                    });
+
+                    tagOps.push(createAndAttachOperation);
+                });
+
+                // attach the tags that already existed
+                _.each(existingTags, function (tag) {
+                    // _.omit(options, 'query') is a fix for using bookshelf 0.6.8
+                    // (https://github.com/tgriesser/bookshelf/issues/294)
+                    tagOps.push(post.tags().attach(tag.id, _.omit(options, 'query')));
+                });
+
+                return when.all(tagOps);
+            });
         });
     },
 
     // Relations
-    user: function () {
-        return this.belongsTo(User, 'created_by');
+    author_id: function () {
+        return this.belongsTo('User', 'author_id');
     },
 
-    author: function () {
-        return this.belongsTo(User, 'author_id');
+    created_by: function () {
+        return this.belongsTo('User', 'created_by');
+    },
+
+    updated_by: function () {
+        return this.belongsTo('User', 'updated_by');
+    },
+
+    published_by: function () {
+        return this.belongsTo('User', 'published_by');
     },
 
     tags: function () {
-        return this.belongsToMany(Tag);
+        return this.belongsToMany('Tag');
+    },
+
+    fields: function () {
+        return this.morphMany('AppField', 'relatable');
+    },
+
+    toJSON: function (options) {
+        var attrs = ghostBookshelf.Model.prototype.toJSON.call(this, options);
+
+        attrs.author = attrs.author || attrs.author_id;
+        delete attrs.author_id;
+
+        return attrs;
     }
 
 }, {
 
-    // #### findAll
-    // Extends base model findAll to eager-fetch author and user relationships.
+    /**
+    * Returns an array of keys permitted in a method's `options` hash, depending on the current method.
+    * @param {String} methodName The name of the method to check valid options for.
+    * @return {Array} Keys allowed in the `options` hash of the model's method.
+    */
+    permittedOptions: function (methodName) {
+        var options = ghostBookshelf.Model.permittedOptions(),
+
+            // whitelists for the `options` hash argument on methods, by method name.
+            // these are the only options that can be passed to Bookshelf / Knex.
+            validOptions = {
+                findAll: ['withRelated'],
+                findOne: ['importing', 'withRelated'],
+                findPage: ['page', 'limit', 'status', 'staticPages'],
+                add: ['importing']
+            };
+
+        if (validOptions[methodName]) {
+            options = options.concat(validOptions[methodName]);
+        }
+
+        return options;
+    },
+
+    /**
+     * Filters potentially unsafe model attributes, so you can pass them to Bookshelf / Knex.
+     * @param {Object} data Has keys representing the model's attributes/fields in the database.
+     * @return {Object} The filtered results of the passed in data, containing only what's allowed in the schema.
+     */
+    filterData: function (data) {
+        var permittedAttributes = this.prototype.permittedAttributes(),
+            filteredData;
+
+        // manually add 'tags' attribute since it's not in the schema
+        permittedAttributes.push('tags');
+
+        filteredData = _.pick(data, permittedAttributes);
+
+        return filteredData;
+    },
+
+    // ## Model Data Functions
+
+    /**
+     * ### Find All
+     *
+     * @param options
+     * @returns {*}
+     */
     findAll:  function (options) {
         options = options || {};
-        options.withRelated = [ 'author', 'user', 'tags' ];
+        options.withRelated = _.union([ 'tags', 'fields' ], options.include);
         return ghostBookshelf.Model.findAll.call(this, options);
     },
 
-    // #### findOne
-    // Extends base model findOne to eager-fetch author and user relationships.
-    findOne: function (args, options) {
+
+    /**
+     * #### findPage
+     * Find results by page - returns an object containing the
+     * information about the request (page, limit), along with the
+     * info needed for pagination (pages, total).
+     *
+     * **response:**
+     *
+     *     {
+     *         posts: [
+     *         {...}, {...}, {...}
+     *     ],
+     *     page: __,
+     *     limit: __,
+     *     pages: __,
+     *     total: __
+     *     }
+     *
+     * @params {Object} options
+     */
+    findPage: function (options) {
         options = options || {};
 
-        args = _.extend({
-            status: 'published'
-        }, args || {});
+        var postCollection = Posts.forge(),
+            tagInstance = options.tag !== undefined ? Tag.forge({slug: options.tag}) : false,
+            authorInstance = options.author !== undefined ? User.forge({slug: options.author}) : false;
 
-        if (args.status === 'all') {
-            delete args.status;
+        if (options.limit) {
+            options.limit = parseInt(options.limit, 10) || 15;
         }
 
-        options.withRelated = [ 'author', 'user', 'tags' ];
-        return ghostBookshelf.Model.findOne.call(this, args, options);
-    },
-
-     // #### findPage
-     // Find results by page - returns an object containing the
-     // information about the request (page, limit), along with the
-     // info needed for pagination (pages, total).
-
-     // **response:**
-
-     //     {
-     //         posts: [
-     //         {...}, {...}, {...}
-     //     ],
-     //     page: __,
-     //     limit: __,
-     //     pages: __,
-     //     total: __
-     //     }
-
-    /*
-     * @params opts
-     */
-    findPage: function (opts) {
-        var postCollection,
-            permittedOptions = ['page', 'limit', 'status', 'staticPages'];
-
-        // sanitize opts
-        opts = _.pick(opts, permittedOptions);
-
-        // Allow findPage(n)
-        if (_.isString(opts) || _.isNumber(opts)) {
-            opts = {page: opts};
+        if (options.page) {
+            options.page = parseInt(options.page, 10) || 1;
         }
 
-        // Without this we are automatically passing through any and all query strings
-        // to Bookshelf / Knex. Although the API requires auth, we should prevent this
-        // until such time as we can design the API properly and safely.
-        opts.where = {};
+        options = this.filterOptions(options, 'findPage');
 
-        opts = _.extend({
+        // Set default settings for options
+        options = _.extend({
             page: 1, // pagination page
             limit: 15,
             staticPages: false, // include static pages
-            status: 'published'
-        }, opts);
+            status: 'published',
+            where: {}
+        }, options);
 
-        postCollection = Posts.forge();
-
-        if (opts.staticPages !== 'all') {
+        if (options.staticPages !== 'all') {
             // convert string true/false to boolean
-            if (!_.isBoolean(opts.staticPages)) {
-                opts.staticPages = opts.staticPages === 'true' || opts.staticPages === '1' ? true : false;
+            if (!_.isBoolean(options.staticPages)) {
+                options.staticPages = options.staticPages === 'true' || options.staticPages === '1' ? true : false;
             }
-            opts.where.page = opts.staticPages;
+            options.where.page = options.staticPages;
         }
 
         // Unless `all` is passed as an option, filter on
         // the status provided.
-        if (opts.status !== 'all') {
+        if (options.status !== 'all') {
             // make sure that status is valid
-            opts.status = _.indexOf(['published', 'draft'], opts.status) !== -1 ? opts.status : 'published';
-            opts.where.status = opts.status;
+            options.status = _.indexOf(['published', 'draft'], options.status) !== -1 ? options.status : 'published';
+            options.where.status = options.status;
         }
 
         // If there are where conditionals specified, add those
         // to the query.
-        if (opts.where) {
-            postCollection.query('where', opts.where);
+        if (options.where) {
+            postCollection.query('where', options.where);
         }
 
-        opts.withRelated = [ 'author', 'user', 'tags' ];
+        // Add related objects
+        options.withRelated = _.union([ 'tags', 'fields' ], options.include);
 
-        // Set the limit & offset for the query, fetching
-        // with the opts (to specify any eager relations, etc.)
-        // Omitting the `page`, `limit`, `where` just to be sure
-        // aren't used for other purposes.
-        return postCollection
-            .query('limit', opts.limit)
-            .query('offset', opts.limit * (opts.page - 1))
-            .query('orderBy', 'status', 'ASC')
-            .query('orderBy', 'published_at', 'DESC')
-            .query('orderBy', 'updated_at', 'DESC')
-            .fetch(_.omit(opts, 'page', 'limit'))
-            .then(function (collection) {
-                var qb;
+        // If a query param for a tag is attached
+        // we need to fetch the tag model to find its id
+        function fetchTagQuery() {
+            if (tagInstance) {
+                return tagInstance.fetch();
+            }
+            return false;
+        }
+
+        function fetchAuthorQuery() {
+            if (authorInstance) {
+                return authorInstance.fetch();
+            }
+            return false;
+        }
+
+        return when.join(fetchTagQuery(), fetchAuthorQuery())
+
+            // Set the limit & offset for the query, fetching
+            // with the opts (to specify any eager relations, etc.)
+            // Omitting the `page`, `limit`, `where` just to be sure
+            // aren't used for other purposes.
+            .then(function () {
+                // If we have a tag instance we need to modify our query.
+                // We need to ensure we only select posts that contain
+                // the tag given in the query param.
+                if (tagInstance) {
+                    postCollection
+                        .query('join', 'posts_tags', 'posts_tags.post_id', '=', 'posts.id')
+                        .query('where', 'posts_tags.tag_id', '=', tagInstance.id);
+                }
+
+                if (authorInstance) {
+                    postCollection
+                        .query('where', 'author_id', '=', authorInstance.id);
+                }
+                return postCollection
+                    .query('limit', options.limit)
+                    .query('offset', options.limit * (options.page - 1))
+                    .query('orderBy', 'status', 'ASC')
+                    .query('orderBy', 'published_at', 'DESC')
+                    .query('orderBy', 'updated_at', 'DESC')
+                    .fetch(_.omit(options, 'page', 'limit'));
+            })
+
+            // Fetch pagination information
+            .then(function () {
+                var qb,
+                    tableName = _.result(postCollection, 'tableName'),
+                    idAttribute = _.result(postCollection, 'idAttribute');
 
                 // After we're done, we need to figure out what
                 // the limits are for the pagination values.
-                qb = ghostBookshelf.knex(_.result(collection, 'tableName'));
+                qb = ghostBookshelf.knex(tableName);
 
-                if (opts.where) {
-                    qb.where(opts.where);
+                if (options.where) {
+                    qb.where(options.where);
                 }
 
-                return qb.count(_.result(collection, 'idAttribute') + ' as aggregate').then(function (resp) {
-                    var totalPosts = parseInt(resp[0].aggregate, 10),
-                        data = {
-                            posts: collection.toJSON(),
-                            page: parseInt(opts.page, 10),
-                            limit: opts.limit,
-                            pages: Math.ceil(totalPosts / opts.limit),
-                            total: totalPosts
-                        };
+                if (tagInstance) {
+                    qb.join('posts_tags', 'posts_tags.post_id', '=', 'posts.id');
+                    qb.where('posts_tags.tag_id', '=', tagInstance.id);
+                }
+                if (authorInstance) {
+                    qb.where('author_id', '=', authorInstance.id);
+                }
 
-                    if (data.pages > 1) {
-                        if (data.page === 1) {
-                            data.next = data.page + 1;
-                        } else if (data.page === data.pages) {
-                            data.prev = data.page - 1;
-                        } else {
-                            data.next = data.page + 1;
-                            data.prev = data.page - 1;
-                        }
+                return qb.count(tableName + '.' + idAttribute + ' as aggregate');
+            })
+
+            // Format response of data
+            .then(function (resp) {
+                var totalPosts = parseInt(resp[0].aggregate, 10),
+                    calcPages = Math.ceil(totalPosts / options.limit),
+                    pagination = {},
+                    meta = {},
+                    data = {};
+
+                pagination.page = options.page;
+                pagination.limit = options.limit;
+                pagination.pages = calcPages === 0 ? 1 : calcPages;
+                pagination.total = totalPosts;
+                pagination.next = null;
+                pagination.prev = null;
+
+                // Pass include to each model so that toJSON works correctly
+                if (options.include) {
+                    _.each(postCollection.models, function (item) {
+                        item.include = options.include;
+                    });
+                }
+
+                data.posts = postCollection.toJSON();
+                data.meta = meta;
+                meta.pagination = pagination;
+
+                if (pagination.pages > 1) {
+                    if (pagination.page === 1) {
+                        pagination.next = pagination.page + 1;
+                    } else if (pagination.page === pagination.pages) {
+                        pagination.prev = pagination.page - 1;
+                    } else {
+                        pagination.next = pagination.page + 1;
+                        pagination.prev = pagination.page - 1;
                     }
-                    return data;
-                }, errors.logAndThrowError);
-            }, errors.logAndThrowError);
+                }
+
+                if (tagInstance) {
+                    meta.filters = {};
+                    if (!tagInstance.isNew()) {
+                        meta.filters.tags = [tagInstance.toJSON()];
+                    }
+                }
+
+                if (authorInstance) {
+                    meta.filters = {};
+                    if (!authorInstance.isNew()) {
+                        meta.filters.author = authorInstance.toJSON();
+                    }
+                }
+
+                return data;
+            })
+            .catch(errors.logAndThrowError);
     },
 
-    permissable: function (postModelOrId, userId, action_type, userPermissions) {
+    /**
+     * ### Find One
+     * @extends ghostBookshelf.Model.findOne to handle post status
+     * **See:** [ghostBookshelf.Model.findOne](base.js.html#Find%20One)
+     */
+    findOne: function (data, options) {
+        options = options || {};
+
+        data = _.extend({
+            status: 'published'
+        }, data || {});
+
+        if (data.status === 'all') {
+            delete data.status;
+        }
+
+        // Add related objects
+        options.withRelated = _.union([ 'tags', 'fields' ], options.include);
+
+        return ghostBookshelf.Model.findOne.call(this, data, options);
+    },
+
+    /**
+     * ### Edit
+     * @extends ghostBookshelf.Model.edit to handle returning the full object and manage _updatedAttributes
+     * **See:** [ghostBookshelf.Model.edit](base.js.html#edit)
+     */
+    edit: function (data, options) {
+        var self = this;
+        options = options || {};
+
+        return ghostBookshelf.Model.edit.call(this, data, options).then(function (post) {
+            return self.findOne({status: 'all', id: options.id}, options)
+                .then(function (found) {
+                    if (found) {
+                        // Pass along the updated attributes for checking status changes
+                        found._updatedAttributes = post._updatedAttributes;
+                        return found;
+                    }
+                });
+        });
+    },
+
+    /**
+     * ### Add
+     * @extends ghostBookshelf.Model.add to handle returning the full object
+     * **See:** [ghostBookshelf.Model.add](base.js.html#add)
+     */
+    add: function (data, options) {
+        var self = this;
+        options = options || {};
+
+        return ghostBookshelf.Model.add.call(this, data, options).then(function (post) {
+            return self.findOne({status: 'all', id: post.id}, options);
+        });
+    },
+
+    /**
+     * ### Destroy
+     * @extends ghostBookshelf.Model.destroy to clean up tag relations
+     * **See:** [ghostBookshelf.Model.destroy](base.js.html#destroy)
+     */
+    destroy: function (options) {
+        var id = options.id;
+        options = this.filterOptions(options, 'destroy');
+
+        return this.forge({id: id}).fetch({withRelated: ['tags']}).then(function destroyTagsAndPost(post) {
+            return post.related('tags').detach().then(function () {
+                return post.destroy(options);
+            });
+        });
+    },
+
+
+    /**
+     * ### destroyByAuthor
+     * @param  {[type]} options has context and id. Context is the user doing the destroy, id is the user to destroy
+     */
+    destroyByAuthor: function (options) {
+        var postCollection = Posts.forge(),
+            authorId = options.id;
+
+        options = this.filterOptions(options, 'destroyByAuthor');
+        if (authorId) {
+            return postCollection.query('where', 'author_id', '=', authorId).fetch(options).then(function (results) {
+                return when.map(results.models, function (post) {
+                    return post.related('tags').detach(null, options).then(function () {
+                        return post.destroy(options);
+                    });
+                });
+            }, function (error) {
+                return when.reject(new errors.InternalServerError(error.message || error));
+            });
+        }
+        return when.reject(new errors.NotFoundError('No user found'));
+    },
+
+
+    permissible: function (postModelOrId, action, context, loadedPermissions, hasUserPermission, hasAppPermission) {
         var self = this,
-            hasPermission,
-            postModel = postModelOrId;
+            postModel = postModelOrId,
+            origArgs;
 
         // If we passed in an id instead of a model, get the model
         // then check the permissions
         if (_.isNumber(postModelOrId) || _.isString(postModelOrId)) {
-            return this.read({id: postModelOrId}).then(function (foundPostModel) {
-                return self.permissable(foundPostModel, userId, action_type, userPermissions);
+            // Grab the original args without the first one
+            origArgs = _.toArray(arguments).slice(1);
+            // Get the actual post model
+            return this.findOne({id: postModelOrId, status: 'all'}).then(function (foundPostModel) {
+                // Build up the original args but substitute with actual model
+                var newArgs = [foundPostModel].concat(origArgs);
+
+                return self.permissible.apply(self, newArgs);
             }, errors.logAndThrowError);
         }
 
-        // Check if any permissions apply for this user and post.
-        hasPermission = _.any(userPermissions, function (perm) {
-            // Check for matching action type and object type
-            if (perm.get('action_type') !== action_type ||
-                    perm.get('object_type') !== 'post') {
-                return false;
-            }
+        if (postModel) {
+            // If this is the author of the post, allow it.
+            hasUserPermission = hasUserPermission || context.user === postModel.get('author_id');
+        }
 
-            // If asking whether we can create posts,
-            // and we have a create posts permission then go ahead and say yes
-            if (action_type === 'create' && perm.get('action_type') === action_type) {
-                return true;
-            }
-
-            // Check for either no object id or a matching one
-            return !perm.get('object_id') || perm.get('object_id') === postModel.id;
-        });
-
-        // If this is the author of the post, allow it.
-        // Moved below the permissions checks because there may not be a postModel
-        // in the case like canThis(user).create.post()
-        hasPermission = hasPermission || (postModel && userId === postModel.get('author_id'));
-
-        // Resolve if we have appropriate permissions
-        if (hasPermission) {
+        if (hasUserPermission && hasAppPermission) {
             return when.resolve();
         }
 
-        // Otherwise, you shall not pass.
         return when.reject();
-    },
-    add: function (newPostData, options) {
-        var self = this;
-        return ghostBookshelf.Model.add.call(this, newPostData, options).then(function (post) {
-            // associated models can't be created until the post has an ID, so run this after
-            return when(post.updateTags(newPostData.tags, null, options)).then(function () {
-                return self.findOne({status: 'all', id: post.id}, options);
-            });
-        });
-    },
-    edit: function (editedPost, options) {
-        var self = this;
-
-        return ghostBookshelf.Model.edit.call(this, editedPost, options).then(function (editedObj) {
-            return when(editedObj.updateTags(editedPost.tags, null, options)).then(function () {
-                return self.findOne({status: 'all', id: editedObj.id}, options);
-            });
-            //return self.findOne({status: 'all', id: editedObj.id}, options);
-        });
-    },
-    destroy: function (_identifier, options) {
-        options = options || {};
-        return this.forge({id: _identifier}).fetch({withRelated: ['tags']}).then(function destroyTags(post) {
-            var tagIds = _.pluck(post.related('tags').toJSON(), 'id');
-            if (tagIds) {
-                return post.tags().detach(tagIds).then(function destroyPost() {
-                    return post.destroy(options);
-                });
-            }
-
-            return post.destroy(options);
-        });
     }
 });
 
 Posts = ghostBookshelf.Collection.extend({
-
     model: Post
-
 });
 
 module.exports = {
-    Post: Post,
-    Posts: Posts
+    Post: ghostBookshelf.model('Post', Post),
+    Posts: ghostBookshelf.collection('Posts', Posts)
 };

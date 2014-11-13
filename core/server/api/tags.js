@@ -1,14 +1,31 @@
-var dataProvider = require('../models'),
+// # Tag API
+// RESTful API for the Tag resource
+var when       = require('when'),
+    canThis    = require('../permissions').canThis,
+    dataProvider = require('../models'),
+    errors     = require('../errors'),
     tags;
 
-
+/**
+ * ## Tags API Methods
+ *
+ * **See:** [API Methods](index.js.html#api%20methods)
+ */
 tags = {
-    // #### All
+    /**
+     * ### Browse
+     * @param {{context}} options
+     * @returns {Promise(Tags)}
+     */
+    browse: function browse(options) {
+        return canThis(options.context).browse.tag().then(function () {
+            return dataProvider.Tag.findAll(options).then(function (result) {
+                return { tags: result.toJSON() };
+            });
 
-    // **takes:** Nothing yet
-    all: function browse() {
-        // **returns:** a promise for all tags which have previously been used in a json object
-        return dataProvider.Tag.findAll();
+        }, function () {
+            return when.reject(new errors.NoPermissionError('You do not have permission to browse tags.'));
+        });
     }
 };
 
