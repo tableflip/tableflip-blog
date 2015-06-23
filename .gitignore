@@ -17,7 +17,5 @@ node_modules
 .idea
 
 /content/tmp/**
-/content/data/**
-/content/images/**
 
 .DS_Store
