@@ -468,7 +468,7 @@ margin on the iframe, cause it breaks stuff. */
 
 /* Big cover image on the home page */
 main#content {
-  padding-top: 120px;
+  padding-top: 160px;
 }
 #header {
   position: fixed;
