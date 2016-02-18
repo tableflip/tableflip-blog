@@ -5,9 +5,9 @@
 // from a theme, an app, or from an external app, you'll use the Ghost JSON API to do so.
 
 var _              = require('lodash'),
-    when           = require('when'),
     config         = require('../config'),
     // Include Endpoints
+    configuration  = require('./configuration'),
     db             = require('./db'),
     mail           = require('./mail'),
     notifications  = require('./notifications'),
@@ -15,16 +15,15 @@ var _              = require('lodash'),
     roles          = require('./roles'),
     settings       = require('./settings'),
     tags           = require('./tags'),
+    clients        = require('./clients'),
     themes         = require('./themes'),
     users          = require('./users'),
     slugs          = require('./slugs'),
     authentication = require('./authentication'),
     uploads        = require('./upload'),
     dataExport     = require('../data/export'),
-    errors         = require('../errors'),
 
     http,
-    formatHttpErrors,
     addHeaders,
     cacheInvalidationHeader,
     locationHeader,
@@ -36,7 +35,7 @@ var _              = require('lodash'),
  * Initialise the API - populate the settings cache
  * @return {Promise(Settings)} Resolves to Settings Collection
  */
-init = function () {
+init = function init() {
     return settings.updateSettingsCache();
 };
 
@@ -51,13 +50,12 @@ init = function () {
  * @private
  * @param {Express.request} req Original HTTP Request
  * @param {Object} result API method result
- * @return {Promise(String)} Resolves to header string
+ * @return {String} Resolves to header string
  */
-cacheInvalidationHeader = function (req, result) {
+cacheInvalidationHeader = function cacheInvalidationHeader(req, result) {
     var parsedUrl = req._parsedUrl.pathname.replace(/^\/|\/$/g, '').split('/'),
         method = req.method,
         endpoint = parsedUrl[0],
-        id = parsedUrl[1],
         cacheInvalidate,
         jsonResult = result.toJSON ? result.toJSON() : result,
         post,
@@ -66,7 +64,7 @@ cacheInvalidationHeader = function (req, result) {
         wasPublishedUpdated;
 
     if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
-        if (endpoint === 'settings' || endpoint === 'users' || endpoint === 'db') {
+        if (endpoint === 'settings' || endpoint === 'users' || endpoint === 'db' || endpoint === 'tags') {
             cacheInvalidate = '/*';
         } else if (endpoint === 'posts') {
             post = jsonResult.posts[0];
@@ -80,17 +78,14 @@ cacheInvalidationHeader = function (req, result) {
 
             // Don't set x-cache-invalidate header for drafts
             if (hasStatusChanged || wasDeleted || wasPublishedUpdated) {
-                cacheInvalidate = '/, /page/*, /rss/, /rss/*, /tag/*, /author/*';
-                if (id && post.slug) {
-                    return config.urlForPost(settings, post).then(function (postUrl) {
-                        return cacheInvalidate + ', ' + postUrl;
-                    });
-                }
+                cacheInvalidate = '/*';
+            } else {
+                cacheInvalidate = '/' + config.routeKeywords.preview + '/' + post.uuid + '/';
             }
         }
     }
 
-    return when(cacheInvalidate);
+    return cacheInvalidate;
 };
 
 /**
@@ -102,9 +97,9 @@ cacheInvalidationHeader = function (req, result) {
  * @private
  * @param {Express.request} req Original HTTP Request
  * @param {Object} result API method result
- * @return {Promise(String)} Resolves to header string
+ * @return {String} Resolves to header string
  */
-locationHeader = function (req, result) {
+locationHeader = function locationHeader(req, result) {
     var apiRoot = config.urlFor('api'),
         location,
         newObject;
@@ -115,14 +110,17 @@ locationHeader = function (req, result) {
             location = apiRoot + '/posts/' + newObject.id + '/?status=' + newObject.status;
         } else if (result.hasOwnProperty('notifications')) {
             newObject = result.notifications[0];
-            location = apiRoot + '/notifications/' + newObject.id;
+            location = apiRoot + '/notifications/' + newObject.id + '/';
         } else if (result.hasOwnProperty('users')) {
             newObject = result.users[0];
-            location = apiRoot + '/users/' + newObject.id;
+            location = apiRoot + '/users/' + newObject.id + '/';
+        } else if (result.hasOwnProperty('tags')) {
+            newObject = result.tags[0];
+            location = apiRoot + '/tags/' + newObject.id + '/';
         }
     }
 
-    return when(location);
+    return location;
 };
 
 /**
@@ -139,71 +137,30 @@ locationHeader = function (req, result) {
  * @see http://tools.ietf.org/html/rfc598
  * @return {string}
  */
-contentDispositionHeader = function () {
-    return dataExport.fileName().then(function (filename) {
+contentDispositionHeader = function contentDispositionHeader() {
+    return dataExport.fileName().then(function then(filename) {
         return 'Attachment; filename="' + filename + '"';
     });
 };
 
-
-/**
- * ### Format HTTP Errors
- * Converts the error response from the API into a format which can be returned over HTTP
- *
- * @private
- * @param {Array} error
- * @return {{errors: Array, statusCode: number}}
- */
-formatHttpErrors = function (error) {
-    var statusCode = 500,
-        errors = [];
-
-    if (!_.isArray(error)) {
-        error = [].concat(error);
-    }
-
-    _.each(error, function (errorItem) {
-        var errorContent = {};
-
-        //TODO: add logic to set the correct status code
-        statusCode = errorItem.code || 500;
-
-        errorContent.message = _.isString(errorItem) ? errorItem :
-            (_.isObject(errorItem) ? errorItem.message : 'Unknown API Error');
-        errorContent.type = errorItem.type || 'InternalServerError';
-        errors.push(errorContent);
-    });
-
-    return {errors: errors, statusCode: statusCode};
-};
-
-
-addHeaders = function (apiMethod, req, res, result) {
-    var ops = [],
-        cacheInvalidation,
+addHeaders = function addHeaders(apiMethod, req, res, result) {
+    var cacheInvalidation,
         location,
         contentDisposition;
 
-    cacheInvalidation = cacheInvalidationHeader(req, result)
-        .then(function addCacheHeader(header) {
-            if (header) {
-                res.set({'X-Cache-Invalidate': header});
-            }
-        });
-
-    ops.push(cacheInvalidation);
+    cacheInvalidation = cacheInvalidationHeader(req, result);
+    if (cacheInvalidation) {
+        res.set({'X-Cache-Invalidate': cacheInvalidation});
+    }
 
     if (req.method === 'POST') {
-        location = locationHeader(req, result)
-            .then(function addLocationHeader(header) {
-                if (header) {
-                    res.set({'Location': header});
-                    // The location header indicates that a new object was created.
-                    // In this case the status code should be 201 Created
-                    res.status(201);
-                }
-            });
-        ops.push(location);
+        location = locationHeader(req, result);
+        if (location) {
+            res.set({Location: location});
+            // The location header indicates that a new object was created.
+            // In this case the status code should be 201 Created
+            res.status(201);
+        }
     }
 
     if (apiMethod === db.exportContent) {
@@ -216,10 +173,9 @@ addHeaders = function (apiMethod, req, res, result) {
                     });
                 }
             });
-        ops.push(contentDisposition);
     }
 
-    return when.all(ops);
+    return contentDisposition;
 };
 
 /**
@@ -232,11 +188,10 @@ addHeaders = function (apiMethod, req, res, result) {
  * @param {Function} apiMethod API method to call
  * @return {Function} middleware format function to be called by the route when a matching request is made
  */
-http = function (apiMethod) {
-    return function (req, res) {
+http = function http(apiMethod) {
+    return function apiHandler(req, res, next) {
         // We define 2 properties for using as arguments in API calls:
         var object = req.body,
-            response,
             options = _.extend({}, req.files, req.query, req.params, {
                 context: {
                     user: (req.user && req.user.id) ? req.user.id : null
@@ -250,23 +205,16 @@ http = function (apiMethod) {
             options = {};
         }
 
-        return apiMethod(object, options)
-            // Handle adding headers
-            .then(function onSuccess(result) {
-                response = result;
-                // Add X-Cache-Invalidate header
-                return addHeaders(apiMethod, req, res, result);
-            }).then(function () {
-                // #### Success
-                // Send a properly formatting HTTP response containing the data with correct headers
-                res.json(response || {});
-            }).catch(function onError(error) {
-                errors.logError(error);
-                // #### Error
-                var httpErrors = formatHttpErrors(error);
-                // Send a properly formatted HTTP response containing the errors
-                res.status(httpErrors.statusCode).json({errors: httpErrors.errors});
-            });
+        return apiMethod(object, options).tap(function onSuccess(response) {
+            // Add X-Cache-Invalidate, Location, and Content-Disposition headers
+            return addHeaders(apiMethod, req, res, (response || {}));
+        }).then(function then(response) {
+            // Send a properly formatting HTTP response containing the data with correct headers
+            res.json(response || {});
+        }).catch(function onAPIError(error) {
+            // To be handled by the API middleware
+            next(error);
+        });
     };
 };
 
@@ -278,6 +226,7 @@ module.exports = {
     init: init,
     http: http,
     // API Endpoints
+    configuration: configuration,
     db: db,
     mail: mail,
     notifications: notifications,
@@ -285,6 +234,7 @@ module.exports = {
     roles: roles,
     settings: settings,
     tags: tags,
+    clients: clients,
     themes: themes,
     users: users,
     slugs: slugs,

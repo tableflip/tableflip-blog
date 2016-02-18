@@ -1,12 +1,12 @@
 
 var _           = require('lodash'),
-    when        = require('when'),
+    Promise     = require('bluebird'),
     errors      = require('../errors'),
     api         = require('../api'),
     loader      = require('./loader'),
+    i18n        = require('../i18n'),
     // Holds the available apps
     availableApps = {};
-
 
 function getInstalledApps() {
     return api.settings.read({context: {internal: true}, key: 'installedApps'}).then(function (response) {
@@ -17,7 +17,7 @@ function getInstalledApps() {
         try {
             installed = JSON.parse(installed.value);
         } catch (e) {
-            return when.reject(e);
+            return Promise.reject(e);
         }
 
         return installed;
@@ -45,11 +45,12 @@ module.exports = {
             });
         } catch (e) {
             errors.logError(
-                'Failed to parse activeApps setting value: ' + e.message,
-                'Your apps will not be loaded.',
-                'Check your settings table for typos in the activeApps value. It should look like: ["app-1", "app2"] (double quotes required).'
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.error', {message: e.message}),
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.context'),
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.help')
             );
-            return when.resolve();
+
+            return Promise.resolve();
         }
 
         // Grab all installed apps, install any not already installed that are in appsToLoad.
@@ -59,7 +60,7 @@ module.exports = {
                     // After loading the app, add it to our hash of loaded apps
                     loadedApps[name] = loadedApp;
 
-                    return when.resolve(loadedApp);
+                    return Promise.resolve(loadedApp);
                 },
                 loadPromises = _.map(appsToLoad, function (app) {
                     // If already installed, just activate the app
@@ -77,17 +78,17 @@ module.exports = {
                     });
                 });
 
-            return when.all(loadPromises).then(function () {
+            return Promise.all(loadPromises).then(function () {
                 // Save our installed apps to settings
                 return saveInstalledApps(_.keys(loadedApps));
             }).then(function () {
                 // Extend the loadedApps onto the available apps
                 _.extend(availableApps, loadedApps);
-            }).otherwise(function (err) {
+            }).catch(function (err) {
                 errors.logError(
                     err.message || err,
-                    'The app will not be loaded',
-                    'Check with the app creator, or read the app documentation for more details on app requirements'
+                    i18n.t('errors.apps.appWillNotBeLoaded.error'),
+                    i18n.t('errors.apps.appWillNotBeLoaded.help')
                 );
             });
         });

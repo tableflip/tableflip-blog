@@ -1,12 +1,13 @@
 
 var path = require('path'),
     _    = require('lodash'),
-    when = require('when'),
+    Promise = require('bluebird'),
     AppProxy = require('./proxy'),
     config = require('../config'),
     AppSandbox = require('./sandbox'),
     AppDependencies = require('./dependencies'),
     AppPermissions = require('./permissions'),
+    i18n = require('../i18n'),
     loader;
 
 // Get the full path to an app by name
@@ -22,7 +23,7 @@ function getAppRelativePath(name, relativeTo) {
     return path.relative(relativeTo, getAppAbsolutePath(name));
 }
 
-// Load apps through a psuedo sandbox
+// Load apps through a pseudo sandbox
 function loadApp(appPath) {
     var sandbox = new AppSandbox();
 
@@ -55,7 +56,7 @@ function getAppByName(name, permissions) {
 loader = {
     // Load a app and return the instantiated app
     installAppByName: function (name) {
-        // Install the apps dependendencies first
+        // Install the apps dependencies first
         var appPath = getAppAbsolutePath(name),
             deps = new AppDependencies(appPath);
 
@@ -64,9 +65,9 @@ loader = {
                 // Load app permissions
                 var perms = new AppPermissions(appPath);
 
-                return perms.read().otherwise(function (err) {
+                return perms.read().catch(function (err) {
                     // Provide a helpful error about which app
-                    return when.reject(new Error("Error loading app named " + name + "; problem reading permissions: " + err.message));
+                    return Promise.reject(new Error(i18n.t('errors.apps.permissionsErrorLoadingApp.error', {name: name, message: err.message})));
                 });
             })
             .then(function (appPerms) {
@@ -76,15 +77,13 @@ loader = {
 
                 // Check for an install() method on the app.
                 if (!_.isFunction(app.install)) {
-                    return when.reject(new Error("Error loading app named " + name + "; no install() method defined."));
+                    return Promise.reject(new Error(i18n.t('errors.apps.noInstallMethodLoadingApp.error', {name: name})));
                 }
 
                 // Run the app.install() method
                 // Wrapping the install() with a when because it's possible
                 // to not return a promise from it.
-                return when(app.install(appProxy)).then(function () {
-                    return when.resolve(app);
-                });
+                return Promise.resolve(app.install(appProxy)).return(app);
             });
     },
 
@@ -99,14 +98,12 @@ loader = {
 
             // Check for an activate() method on the app.
             if (!_.isFunction(app.activate)) {
-                return when.reject(new Error("Error loading app named " + name + "; no activate() method defined."));
+                return Promise.reject(new Error(i18n.t('errors.apps.noActivateMethodLoadingApp.error', {name: name})));
             }
 
             // Wrapping the activate() with a when because it's possible
             // to not return a promise from it.
-            return when(app.activate(appProxy)).then(function () {
-                return when.resolve(app);
-            });
+            return Promise.resolve(app.activate(appProxy)).return(app);
         });
     }
 };

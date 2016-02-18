@@ -1,14 +1,14 @@
+// # Bootup
+// This file needs serious love & refactoring
+
 // Module dependencies
-var crypto      = require('crypto'),
-    express     = require('express'),
+var express     = require('express'),
     hbs         = require('express-hbs'),
     compress    = require('compression'),
     fs          = require('fs'),
     uuid        = require('node-uuid'),
-    Polyglot    = require('node-polyglot'),
-    semver      = require('semver'),
-    _           = require('lodash'),
-    when        = require('when'),
+    Promise     = require('bluebird'),
+    i18n        = require('./i18n'),
 
     api         = require('./api'),
     config      = require('./config'),
@@ -20,36 +20,12 @@ var crypto      = require('crypto'),
     models      = require('./models'),
     permissions = require('./permissions'),
     apps        = require('./apps'),
-    packageInfo = require('../../package.json'),
+    sitemap     = require('./data/xml/sitemap'),
+    xmlrpc      = require('./data/xml/xmlrpc'),
+    GhostServer = require('./ghost-server'),
+    validateThemes = require('./utils/validate-themes'),
 
-// Variables
-    httpServer,
     dbHash;
-
-// If we're in development mode, require "when/console/monitor"
-// for help in seeing swallowed promise errors, and log any
-// stderr messages from bluebird promises.
-if (process.env.NODE_ENV === 'development') {
-    require('when/monitor/console');
-}
-
-function doFirstRun() {
-    var firstRunMessage = [
-        'Welcome to Ghost.',
-        'You\'re running under the <strong>',
-        process.env.NODE_ENV,
-        '</strong>environment.',
-
-        'Your URL is set to',
-        '<strong>' + config.url + '</strong>.',
-        'See <a href="http://support.ghost.org/">http://support.ghost.org</a> for instructions.'
-    ];
-
-    return api.notifications.add({ notifications: [{
-        type: 'info',
-        message: firstRunMessage.join(' ')
-    }] }, {context: {internal: true}});
-}
 
 function initDbHashAndFirstRun() {
     return api.settings.read({key: 'dbHash', context: {internal: true}}).then(function (response) {
@@ -64,7 +40,8 @@ function initDbHashAndFirstRun() {
                 .then(function (response) {
                     dbHash = response.settings[0].value;
                     return dbHash;
-                }).then(doFirstRun);
+                    // Use `then` here to do 'first run' actions
+                });
         }
 
         return dbHash;
@@ -76,92 +53,43 @@ function initDbHashAndFirstRun() {
 // any are missing.
 function builtFilesExist() {
     var deferreds = [],
-        location = config.paths.builtScriptPath,
+        location = config.paths.clientAssets,
+        fileNames = ['ghost.js', 'vendor.js', 'ghost.css', 'vendor.css'];
 
-        fileNames = process.env.NODE_ENV === 'production' ?
-            helpers.scriptFiles.production : helpers.scriptFiles.development;
+    if (process.env.NODE_ENV === 'production') {
+        // Production uses `.min` files
+        fileNames = fileNames.map(function (file) {
+            return file.replace('.', '.min.');
+        });
+    }
 
     function checkExist(fileName) {
-        var deferred = when.defer(),
-            errorMessage = "Javascript files have not been built.",
-            errorHelp = "\nPlease read the getting started instructions at:" +
-                        "\nhttps://github.com/TryGhost/Ghost#getting-started-guide-for-developers";
+        var errorMessage = i18n.t('errors.index.javascriptFilesNotBuilt.error'),
+            errorHelp = i18n.t('errors.index.javascriptFilesNotBuilt.help', {link: '\nhttps://github.com/TryGhost/Ghost#getting-started'});
 
-        fs.exists(fileName, function (exists) {
-            if (exists) {
-                deferred.resolve(true);
-            } else {
-                var err = new Error(errorMessage);
+        return new Promise(function (resolve, reject) {
+            fs.stat(fileName, function (statErr) {
+                var exists = (statErr) ? false : true,
+                    err;
 
-                err.help = errorHelp;
-                deferred.reject(err);
-            }
+                if (exists) {
+                    resolve(true);
+                } else {
+                    err = new Error(errorMessage);
+
+                    err.help = errorHelp;
+                    reject(err);
+                }
+            });
         });
-
-        return deferred.promise;
     }
 
     fileNames.forEach(function (fileName) {
         deferreds.push(checkExist(location + fileName));
     });
 
-    return when.all(deferreds);
+    return Promise.all(deferreds);
 }
-
-function ghostStartMessages() {
-    // Tell users if their node version is not supported, and exit
-    if (!semver.satisfies(process.versions.node, packageInfo.engines.node)) {
-        console.log(
-            "\nERROR: Unsupported version of Node".red,
-            "\nGhost needs Node version".red,
-            packageInfo.engines.node.yellow,
-            "you are using version".red,
-            process.versions.node.yellow,
-            "\nPlease go to http://nodejs.org to get a supported version".green
-        );
-
-        process.exit(0);
-    }
-
-    // Startup & Shutdown messages
-    if (process.env.NODE_ENV === 'production') {
-        console.log(
-            "Ghost is running...".green,
-            "\nYour blog is now available on",
-            config.url,
-            "\nCtrl+C to shut down".grey
-        );
-
-        // ensure that Ghost exits correctly on Ctrl+C
-        process.removeAllListeners('SIGINT').on('SIGINT', function () {
-            console.log(
-                "\nGhost has shut down".red,
-                "\nYour blog is now offline"
-            );
-            process.exit(0);
-        });
-    } else {
-        console.log(
-            ("Ghost is running in " + process.env.NODE_ENV + "...").green,
-            "\nListening on",
-                config.getSocket() || config.server.host + ':' + config.server.port,
-            "\nUrl configured as:",
-            config.url,
-            "\nCtrl+C to shut down".grey
-        );
-        // ensure that Ghost exits correctly on Ctrl+C
-        process.removeAllListeners('SIGINT').on('SIGINT', function () {
-            console.log(
-                "\nGhost has shutdown".red,
-                "\nGhost was running for",
-                Math.round(process.uptime()),
-                "seconds"
-            );
-            process.exit(0);
-        });
-    }
-}
-
 
 // This is run after every initialization is done, right before starting server.
 // Its main purpose is to move adding notifications here, so none of the submodules
@@ -169,51 +97,51 @@ function ghostStartMessages() {
 // This is also a "one central repository" of adding startup notifications in case
 // in the future apps will want to hook into here
 function initNotifications() {
-    if (mailer.state && mailer.state.usingSendmail) {
-        api.notifications.add({ notifications: [{
+    if (mailer.state && mailer.state.usingDirect) {
+        api.notifications.add({notifications: [{
             type: 'info',
             message: [
-                "Ghost is attempting to use your server's <b>sendmail</b> to send e-mail.",
-                "It is recommended that you explicitly configure an e-mail service,",
-                "See <a href=\"http://support.ghost.org/mail\">http://support.ghost.org/mail</a> for instructions"
+                i18n.t('warnings.index.usingDirectMethodToSendEmail'),
+                i18n.t('common.seeLinkForInstructions',
+                       {link: '<a href=\'http://support.ghost.org/mail\' target=\'_blank\'>http://support.ghost.org/mail</a>'})
             ].join(' ')
-        }] }, {context: {internal: true}});
+        }]}, {context: {internal: true}});
     }
     if (mailer.state && mailer.state.emailDisabled) {
-        api.notifications.add({ notifications: [{
+        api.notifications.add({notifications: [{
             type: 'warn',
             message: [
-                "Ghost is currently unable to send e-mail.",
-                "See <a href=\"http://support.ghost.org/mail\">http://support.ghost.org/mail</a> for instructions"
+                i18n.t('warnings.index.unableToSendEmail'),
+                i18n.t('common.seeLinkForInstructions',
+                       {link: '<a href=\'http://support.ghost.org/mail\' target=\'_blank\'>http://support.ghost.org/mail</a>'})
             ].join(' ')
-        }] }, {context: {internal: true}});
+        }]}, {context: {internal: true}});
     }
 }
 
-// ## Initializes the ghost application.
-// Sets up the express server instance.
-// Instantiates the ghost singleton, helpers, routes, middleware, and apps.
-// Finally it starts the http server.
-function init(server) {
-    // create a hash for cache busting assets
-    var assetHash = (crypto.createHash('md5').update(packageInfo.version + Date.now()).digest('hex')).substring(0, 10);
-
-    // If no express instance is passed in
-    // then create our own
-    if (!server) {
-        server = express();
-    }
-
-    // Set up Polygot instance on the require module
-    Polyglot.instance = new Polyglot();
+// ## Initialise Ghost
+// Sets up the express server instances, runs init on a bunch of stuff, configures views, helpers, routes and more
+// Finally it returns an instance of GhostServer
+function init(options) {
+    // Get reference to an express app instance.
+    var blogApp = express(),
+        adminApp = express();
 
     // ### Initialisation
     // The server and its dependencies require a populated config
     // It returns a promise that is resolved when the application
     // has finished starting up.
 
-    // Make sure javascript files have been built via grunt concat
-    return builtFilesExist().then(function () {
+    // Initialize Internationalization
+    i18n.init();
+
+    // Load our config.js file from the local file system.
+    return config.load(options.config).then(function () {
+        return config.checkDeprecated();
+    }).then(function () {
+        // Make sure javascript files have been built via grunt concat
+        return builtFilesExist();
+    }).then(function () {
         // Initialise the models
         return models.init();
     }).then(function () {
@@ -227,87 +155,64 @@ function init(server) {
         return api.init();
     }).then(function () {
         // Initialize the permissions actions and objects
-        // NOTE: Must be done before the config.theme.update and initDbHashAndFirstRun calls
+        // NOTE: Must be done before initDbHashAndFirstRun calls
         return permissions.init();
     }).then(function () {
-        // We must pass the api.settings object
-        // into this method due to circular dependencies.
-        return config.theme.update(api.settings, config.url);
-    }).then(function () {
-        return when.join(
+        return Promise.join(
             // Check for or initialise a dbHash.
             initDbHashAndFirstRun(),
             // Initialize mail
             mailer.init(),
             // Initialize apps
-            apps.init()
+            apps.init(),
+            // Initialize sitemaps
+            sitemap.init(),
+            // Initialize xmrpc ping
+            xmlrpc.init()
         );
     }).then(function () {
-        var adminHbs = hbs.create(),
-            deferred = when.defer();
+        var adminHbs = hbs.create();
 
         // Output necessary notifications on init
         initNotifications();
         // ##Configuration
 
-        // return the correct mime type for woff filess
-        express['static'].mime.define({'application/font-woff': ['woff']});
+        // return the correct mime type for woff files
+        express.static.mime.define({'application/font-woff': ['woff']});
 
         // enabled gzip compression by default
         if (config.server.compress !== false) {
-            server.use(compress());
+            blogApp.use(compress());
         }
 
         // ## View engine
         // set the view engine
-        server.set('view engine', 'hbs');
+        blogApp.set('view engine', 'hbs');
 
         // Create a hbs instance for admin and init view engine
-        server.set('admin view engine', adminHbs.express3({}));
+        adminApp.set('view engine', 'hbs');
+        adminApp.engine('hbs', adminHbs.express3({}));
 
         // Load helpers
-        helpers.loadCoreHelpers(adminHbs, assetHash);
+        helpers.loadCoreHelpers(adminHbs);
 
         // ## Middleware and Routing
-        middleware(server, dbHash);
+        middleware(blogApp, adminApp);
 
         // Log all theme errors and warnings
-        _.each(config.paths.availableThemes._messages.errors, function (error) {
-            errors.logError(error.message, error.context, error.help);
-        });
+        validateThemes(config.paths.themePath)
+            .catch(function (result) {
+                // TODO: change `result` to something better
+                result.errors.forEach(function (err) {
+                    errors.logError(err.message, err.context, err.help);
+                });
 
-        _.each(config.paths.availableThemes._messages.warns, function (warn) {
-            errors.logWarn(warn.message, warn.context, warn.help);
-        });
+                result.warnings.forEach(function (warn) {
+                    errors.logWarn(warn.message, warn.context, warn.help);
+                });
+            });
 
-        // ## Start Ghost App
-        if (config.getSocket()) {
-            // Make sure the socket is gone before trying to create another
-            try {
-                fs.unlinkSync(config.getSocket());
-            } catch (e) {
-                // We can ignore this.
-            }
-
-            httpServer = server.listen(
-                config.getSocket()
-            );
-            fs.chmod(config.getSocket(), '0660');
-
-        } else {
-            httpServer = server.listen(
-                config.server.port,
-                config.server.host
-            );
-        }
-
-        httpServer.on('listening', function () {
-            ghostStartMessages();
-            deferred.resolve(httpServer);
-        });
-
-
-        return deferred.promise;
+        return new GhostServer(blogApp);
     });
 }
 

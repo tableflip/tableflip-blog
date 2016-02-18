@@ -2,15 +2,17 @@
 // RESTful API for the Setting resource
 var _            = require('lodash'),
     dataProvider = require('../models'),
-    when         = require('when'),
+    Promise      = require('bluebird'),
     config       = require('../config'),
     canThis      = require('../permissions').canThis,
     errors       = require('../errors'),
     utils        = require('./utils'),
+    i18n         = require('../i18n'),
 
     docName      = 'settings',
     settings,
 
+    updateConfigCache,
     updateSettingsCache,
     settingsFilter,
     filterPaths,
@@ -28,12 +30,45 @@ var _            = require('lodash'),
      */
     settingsCache = {};
 
+/**
+* ### Updates Config Theme Settings
+* Maintains the cache of theme specific variables that are reliant on settings.
+* @private
+*/
+updateConfigCache = function () {
+    var errorMessages = [
+        i18n.t('errors.api.settings.invalidJsonInLabs'),
+        i18n.t('errors.api.settings.labsColumnCouldNotBeParsed'),
+        i18n.t('errors.api.settings.tryUpdatingLabs')
+    ], labsValue = {};
+
+    if (settingsCache.labs && settingsCache.labs.value) {
+        try {
+            labsValue = JSON.parse(settingsCache.labs.value);
+        } catch (e) {
+            errors.logError.apply(this, errorMessages);
+        }
+    }
+
+    config.set({
+        theme: {
+            title: (settingsCache.title && settingsCache.title.value) || '',
+            description: (settingsCache.description && settingsCache.description.value) || '',
+            logo: (settingsCache.logo && settingsCache.logo.value) || '',
+            cover: (settingsCache.cover && settingsCache.cover.value) || '',
+            navigation: (settingsCache.navigation && JSON.parse(settingsCache.navigation.value)) || [],
+            postsPerPage: (settingsCache.postsPerPage && settingsCache.postsPerPage.value) || 5,
+            permalinks: (settingsCache.permalinks && settingsCache.permalinks.value) || '/:slug/'
+        },
+        labs: labsValue
+    });
+};
 
 /**
  * ### Update Settings Cache
  * Maintain the internal cache of the settings object
  * @public
- * @param settings
+ * @param {Object} settings
  * @returns {Settings}
  */
 updateSettingsCache = function (settings) {
@@ -44,12 +79,16 @@ updateSettingsCache = function (settings) {
             settingsCache[key] = setting;
         });
 
-        return when(settingsCache);
+        updateConfigCache();
+
+        return Promise.resolve(settingsCache);
     }
 
     return dataProvider.Settings.findAll()
         .then(function (result) {
             settingsCache = readSettingsResult(result.models);
+
+            updateConfigCache();
 
             return settingsCache;
         });
@@ -61,8 +100,8 @@ updateSettingsCache = function (settings) {
  * ### Settings Filter
  * Filters an object based on a given filter object
  * @private
- * @param settings
- * @param filter
+ * @param {Object} settings
+ * @param {String} filter
  * @returns {*}
  */
 settingsFilter = function (settings, filter) {
@@ -97,7 +136,7 @@ filterPaths = function (paths, active) {
     }
 
     _.each(pathKeys, function (key) {
-        //do not include hidden files or _messages
+        // do not include hidden files or _messages
         if (key.indexOf('.') !== 0 &&
                 key !== '_messages' &&
                 key !== 'README.md'
@@ -120,11 +159,10 @@ filterPaths = function (paths, active) {
     return res;
 };
 
-
 /**
  * ### Read Settings Result
  * @private
- * @param settingsModels
+ * @param {Array} settingsModels
  * @returns {Settings}
  */
 readSettingsResult = function (settingsModels) {
@@ -165,8 +203,8 @@ readSettingsResult = function (settingsModels) {
 /**
  * ### Settings Result
  * @private
- * @param settings
- * @param type
+ * @param {Object} settings
+ * @param {String} type
  * @returns {{settings: *}}
  */
 settingsResult = function (settings, type) {
@@ -188,8 +226,7 @@ settingsResult = function (settings, type) {
 /**
  * ### Populate Default Setting
  * @private
- * @param key
- * @param type
+ * @param {String} key
  * @returns Promise(Setting)
  */
 populateDefaultSetting = function (key) {
@@ -200,20 +237,16 @@ populateDefaultSetting = function (key) {
 
         // Add to the settings cache
         return updateSettingsCache(readResult).then(function () {
-            // Try to update theme with the new settings
-            // if we're in the middle of populating, this might not work
-            return config.theme.update(settings, config.url).then(function () { return; }, function () { return; });
-        }).then(function () {
             // Get the result from the cache with permission checks
         });
-    }).otherwise(function (err) {
+    }).catch(function (err) {
         // Pass along NotFoundError
         if (typeof err === errors.NotFoundError) {
-            return when.reject(err);
+            return Promise.reject(err);
         }
 
         // TODO: Different kind of error?
-        return when.reject(new errors.NotFoundError('Problem finding setting: ' + key));
+        return Promise.reject(new errors.NotFoundError(i18n.t('errors.api.settings.problemFindingSetting', {key: key})));
     });
 };
 
@@ -221,21 +254,20 @@ populateDefaultSetting = function (key) {
  * ### Can Edit All Settings
  * Check that this edit request is allowed for all settings requested to be updated
  * @private
- * @param settingsInfo
+ * @param {Object} settingsInfo
  * @returns {*}
  */
 canEditAllSettings = function (settingsInfo, options) {
     var checkSettingPermissions = function (setting) {
             if (setting.type === 'core' && !(options.context && options.context.internal)) {
-                return when.reject(
-                    new errors.NoPermissionError('Attempted to access core setting from external request')
+                return Promise.reject(
+                    new errors.NoPermissionError(i18n.t('errors.api.settings.accessCoreSettingFromExtReq'))
                 );
             }
 
             return canThis(options.context).edit.setting(setting.key).catch(function () {
-                return when.reject(new errors.NoPermissionError('You do not have permission to edit settings.'));
+                return Promise.reject(new errors.NoPermissionError(i18n.t('errors.api.settings.noPermissionToEditSettings')));
             });
-
         },
         checks = _.map(settingsInfo, function (settingInfo) {
             var setting = settingsCache[settingInfo.key];
@@ -251,7 +283,7 @@ canEditAllSettings = function (settingsInfo, options) {
             return checkSettingPermissions(setting);
         });
 
-    return when.all(checks);
+    return Promise.all(checks);
 };
 
 /**
@@ -263,7 +295,7 @@ settings = {
 
     /**
      * ### Browse
-     * @param options
+     * @param {Object} options
      * @returns {*}
      */
     browse: function browse(options) {
@@ -281,7 +313,7 @@ settings = {
 
         // If there is no context, return only blog settings
         if (!options.context) {
-            return when(_.filter(result.settings, function (setting) { return setting.type === 'blog'; }));
+            return Promise.resolve(_.filter(result.settings, function (setting) { return setting.type === 'blog'; }));
         }
 
         // Otherwise return whatever this context is allowed to browse
@@ -297,12 +329,12 @@ settings = {
 
     /**
      * ### Read
-     * @param options
+     * @param {Object} options
      * @returns {*}
      */
     read: function read(options) {
         if (_.isString(options)) {
-            options = { key: options };
+            options = {key: options};
         }
 
         var getSettingsResult = function () {
@@ -312,19 +344,19 @@ settings = {
                 result[options.key] = setting;
 
                 if (setting.type === 'core' && !(options.context && options.context.internal)) {
-                    return when.reject(
-                        new errors.NoPermissionError('Attempted to access core setting from external request')
+                    return Promise.reject(
+                        new errors.NoPermissionError(i18n.t('errors.api.settings.accessCoreSettingFromExtReq'))
                     );
                 }
 
                 if (setting.type === 'blog') {
-                    return when(settingsResult(result));
+                    return Promise.resolve(settingsResult(result));
                 }
 
                 return canThis(options.context).read.setting(options.key).then(function () {
                     return settingsResult(result);
                 }, function () {
-                    return when.reject(new errors.NoPermissionError('You do not have permission to read settings.'));
+                    return Promise.reject(new errors.NoPermissionError(i18n.t('errors.api.settings.noPermissionToReadSettings')));
                 });
             };
 
@@ -343,7 +375,7 @@ settings = {
 
     /**
      * ### Edit
-     * Update properties of a post
+     * Update properties of a setting
      * @param {{settings: }} object Setting or a single string name
      * @param {{id (required), include,...}} options (optional) or a single string value
      * @return {Promise(Setting)} Edited Setting
@@ -355,10 +387,10 @@ settings = {
 
         // Allow shorthand syntax where a single key and value are passed to edit instead of object and options
         if (_.isString(object)) {
-            object = { settings: [{ key: object, value: options }]};
+            object = {settings: [{key: object, value: options}]};
         }
 
-        //clean data
+        // clean data
         _.each(object.settings, function (setting) {
             if (!_.isString(setting.value)) {
                 setting.value = JSON.stringify(setting.value);
@@ -382,8 +414,6 @@ settings = {
                 var readResult = readSettingsResult(result);
 
                 return updateSettingsCache(readResult).then(function () {
-                    return config.theme.update(settings, config.url);
-                }).then(function () {
                     return settingsResult(readResult, type);
                 });
             });

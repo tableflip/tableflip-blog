@@ -1,9 +1,9 @@
-var when          = require('when'),
+// # Filters
+// Filters are not yet properly used, this system is intended to allow Apps to extend Ghost in various ways.
+var Promise       = require('bluebird'),
+    pipeline      = require('./utils/pipeline'),
     _             = require('lodash'),
-
     defaults;
-
-when.pipeline = require('when/pipeline');
 
 // ## Default values
 /**
@@ -15,13 +15,13 @@ defaults = {
     maxPriority: 9
 };
 
-var Filters = function () {
+function Filters() {
     // Holds the filters
     this.filterCallbacks = [];
 
     // Holds the filter hooks (that are built in to Ghost Core)
     this.filters = [];
-};
+}
 
 // Register a new filter callback function
 Filters.prototype.registerFilter = function (name, priority, fn) {
@@ -64,7 +64,7 @@ Filters.prototype.doFilter = function (name, args, context) {
 
     // Bug out early if no callbacks by that name
     if (!callbacks) {
-        return when.resolve(args);
+        return Promise.resolve(args);
     }
 
     // For each priorityLevel
@@ -75,7 +75,7 @@ Filters.prototype.doFilter = function (name, args, context) {
 
             // Bug out if no handlers on this priority
             if (!_.isArray(callbacks[priority])) {
-                return when.resolve(currentArgs);
+                return Promise.resolve(currentArgs);
             }
 
             callables = _.map(callbacks[priority], function (callback) {
@@ -84,11 +84,11 @@ Filters.prototype.doFilter = function (name, args, context) {
                 };
             });
             // Call each handler for this priority level, allowing for promises or values
-            return when.pipeline(callables, currentArgs);
+            return pipeline(callables, currentArgs);
         });
     });
 
-    return when.pipeline(priorityCallbacks, args);
+    return pipeline(priorityCallbacks, args);
 };
 
 module.exports = new Filters();

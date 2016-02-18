@@ -1,11 +1,11 @@
 var _       = require('lodash'),
-    when    = require('when'),
+    Promise = require('bluebird'),
     config  = require('../../config'),
     schema  = require('../schema').tables,
     clients = require('./clients'),
+    i18n    = require('../../i18n'),
 
     dbConfig;
-
 
 function addTableColumn(tablename, table, columnname) {
     var column,
@@ -35,7 +35,7 @@ function addTableColumn(tablename, table, columnname) {
         column.unsigned();
     }
     if (columnSpec.hasOwnProperty('references')) {
-        //check if table exists?
+        // check if table exists?
         column.references(columnSpec.references);
     }
     if (columnSpec.hasOwnProperty('defaultTo')) {
@@ -87,7 +87,7 @@ function getTables() {
         return clients[client].getTables();
     }
 
-    return when.reject('No support for database client ' + client);
+    return Promise.reject(i18n.t('notices.data.utils.index.noSupportForDatabase', {client: client}));
 }
 
 function getIndexes(table) {
@@ -98,7 +98,7 @@ function getIndexes(table) {
         return clients[client].getIndexes(table);
     }
 
-    return when.reject('No support for database client ' + client);
+    return Promise.reject(i18n.t('notices.data.utils.index.noSupportForDatabase', {client: client}));
 }
 
 function getColumns(table) {
@@ -109,7 +109,7 @@ function getColumns(table) {
         return clients[client].getColumns(table);
     }
 
-    return when.reject('No support for database client ' + client);
+    return Promise.reject(i18n.t('notices.data.utils.index.noSupportForDatabase', {client: client}));
 }
 
 function checkTables() {

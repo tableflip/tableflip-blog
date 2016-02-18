@@ -1,14 +1,14 @@
 var db = {
         posts: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             title: {type: 'string', maxlength: 150, nullable: false},
             slug: {type: 'string', maxlength: 150, nullable: false, unique: true},
             markdown: {type: 'text', maxlength: 16777215, fieldtype: 'medium', nullable: true},
             html: {type: 'text', maxlength: 16777215, fieldtype: 'medium', nullable: true},
             image: {type: 'text', maxlength: 2000, nullable: true},
-            featured: {type: 'bool', nullable: false, defaultTo: false, validations: {'isIn': [[0, 1, false, true]]}},
-            page: {type: 'bool', nullable: false, defaultTo: false, validations: {'isIn': [[0, 1, false, true]]}},
+            featured: {type: 'bool', nullable: false, defaultTo: false, validations: {isIn: [[0, 1, false, true]]}},
+            page: {type: 'bool', nullable: false, defaultTo: false, validations: {isIn: [[0, 1, false, true]]}},
             status: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'draft'},
             language: {type: 'string', maxlength: 6, nullable: false, defaultTo: 'en_US'},
             meta_title: {type: 'string', maxlength: 150, nullable: true},
@@ -23,21 +23,22 @@ var db = {
         },
         users: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             name: {type: 'string', maxlength: 150, nullable: false},
             slug: {type: 'string', maxlength: 150, nullable: false, unique: true},
             password: {type: 'string', maxlength: 60, nullable: false},
-            email: {type: 'string', maxlength: 254, nullable: false, unique: true, validations: {'isEmail': true}},
+            email: {type: 'string', maxlength: 254, nullable: false, unique: true, validations: {isEmail: true}},
             image: {type: 'text', maxlength: 2000, nullable: true},
             cover: {type: 'text', maxlength: 2000, nullable: true},
             bio: {type: 'string', maxlength: 200, nullable: true},
-            website: {type: 'text', maxlength: 2000, nullable: true, validations: {'isEmptyOrURL': true}},
+            website: {type: 'text', maxlength: 2000, nullable: true, validations: {isEmptyOrURL: true}},
             location: {type: 'text', maxlength: 65535, nullable: true},
             accessibility: {type: 'text', maxlength: 65535, nullable: true},
             status: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'active'},
             language: {type: 'string', maxlength: 6, nullable: false, defaultTo: 'en_US'},
             meta_title: {type: 'string', maxlength: 150, nullable: true},
             meta_description: {type: 'string', maxlength: 200, nullable: true},
+            tour: {type: 'text', maxlength: 65535, nullable: true},
             last_login: {type: 'dateTime', nullable: true},
             created_at: {type: 'dateTime', nullable: false},
             created_by: {type: 'integer', nullable: false},
@@ -46,7 +47,7 @@ var db = {
         },
         roles: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             name: {type: 'string', maxlength: 150, nullable: false},
             description: {type: 'string', maxlength: 200, nullable: true},
             created_at: {type: 'dateTime',  nullable: false},
@@ -61,7 +62,7 @@ var db = {
         },
         permissions: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             name: {type: 'string', maxlength: 150, nullable: false},
             object_type: {type: 'string', maxlength: 150, nullable: false},
             action_type: {type: 'string', maxlength: 150, nullable: false},
@@ -88,10 +89,10 @@ var db = {
         },
         settings: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             key: {type: 'string', maxlength: 150, nullable: false, unique: true},
             value: {type: 'text', maxlength: 65535, nullable: true},
-            type: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'core', validations: {'isIn': [['core', 'blog', 'theme', 'app', 'plugin']]}},
+            type: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'core', validations: {isIn: [['core', 'blog', 'theme', 'app', 'plugin', 'private']]}},
             created_at: {type: 'dateTime', nullable: false},
             created_by: {type: 'integer', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
@@ -99,12 +100,12 @@ var db = {
         },
         tags: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
-            name: {type: 'string', maxlength: 150, nullable: false},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
+            name: {type: 'string', maxlength: 150, nullable: false, validations: {matches: /^([^,]|$)/}},
             slug: {type: 'string', maxlength: 150, nullable: false, unique: true},
             description: {type: 'string', maxlength: 200, nullable: true},
             image: {type: 'text', maxlength: 2000, nullable: true},
-            hidden: {type: 'bool', nullable: false, defaultTo: false, validations: {'isIn': [[0, 1, false, true]]}},
+            hidden: {type: 'bool', nullable: false, defaultTo: false, validations: {isIn: [[0, 1, false, true]]}},
             parent_id: {type: 'integer', nullable: true},
             meta_title: {type: 'string', maxlength: 150, nullable: true},
             meta_description: {type: 'string', maxlength: 200, nullable: true},
@@ -116,11 +117,12 @@ var db = {
         posts_tags: {
             id: {type: 'increments', nullable: false, primary: true},
             post_id: {type: 'integer', nullable: false, unsigned: true, references: 'posts.id'},
-            tag_id: {type: 'integer', nullable: false, unsigned: true, references: 'tags.id'}
+            tag_id: {type: 'integer', nullable: false, unsigned: true, references: 'tags.id'},
+            sort_order: {type: 'integer',  nullable: false, unsigned: true, defaultTo: 0}
         },
         apps: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             name: {type: 'string', maxlength: 150, nullable: false, unique: true},
             slug: {type: 'string', maxlength: 150, nullable: false, unique: true},
             version: {type: 'string', maxlength: 150, nullable: false},
@@ -132,7 +134,7 @@ var db = {
         },
         app_settings: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             key: {type: 'string', maxlength: 150, nullable: false, unique: true},
             value: {type: 'text', maxlength: 65535, nullable: true},
             app_id: {type: 'integer', nullable: false, unsigned: true, references: 'apps.id'},
@@ -143,14 +145,14 @@ var db = {
         },
         app_fields: {
             id: {type: 'increments', nullable: false, primary: true},
-            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {'isUUID': true}},
+            uuid: {type: 'string', maxlength: 36, nullable: false, validations: {isUUID: true}},
             key: {type: 'string', maxlength: 150, nullable: false},
             value: {type: 'text', maxlength: 65535, nullable: true},
             type: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'html'},
             app_id: {type: 'integer', nullable: false, unsigned: true, references: 'apps.id'},
             relatable_id: {type: 'integer', nullable: false, unsigned: true},
             relatable_type: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'posts'},
-            active: {type: 'bool', nullable: false, defaultTo: true, validations: {'isIn': [[0, 1, false, true]]}},
+            active: {type: 'bool', nullable: false, defaultTo: true, validations: {isIn: [[0, 1, false, true]]}},
             created_at: {type: 'dateTime', nullable: false},
             created_by: {type: 'integer', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
@@ -161,11 +163,22 @@ var db = {
             uuid: {type: 'string', maxlength: 36, nullable: false},
             name: {type: 'string', maxlength: 150, nullable: false, unique: true},
             slug: {type: 'string', maxlength: 150, nullable: false, unique: true},
-            secret: {type: 'string', maxlength: 150, nullable: false, unique: true},
+            secret: {type: 'string', maxlength: 150, nullable: false},
+            redirection_uri: {type: 'string', maxlength: 2000, nullable: true},
+            logo: {type: 'string', maxlength: 2000, nullable: true},
+            status: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'development'},
+            type: {type: 'string', maxlength: 150, nullable: false, defaultTo: 'ua'},
+            description: {type: 'string', maxlength: 200, nullable: true},
             created_at: {type: 'dateTime', nullable: false},
             created_by: {type: 'integer', nullable: false},
             updated_at: {type: 'dateTime', nullable: true},
             updated_by: {type: 'integer', nullable: true}
+        },
+        client_trusted_domains: {
+            id: {type: 'increments', nullable: false, primary: true},
+            uuid: {type: 'string', maxlength: 36, nullable: false},
+            client_id: {type: 'integer', nullable: false, unsigned: true, references: 'clients.id'},
+            trusted_domain: {type: 'string', maxlength: 2000, nullable: true}
         },
         accesstokens: {
             id: {type: 'increments', nullable: false, primary: true},
@@ -198,9 +211,15 @@ function isUser(jsonData) {
         jsonData.hasOwnProperty('status') && jsonData.hasOwnProperty('location');
 }
 
+function isNav(jsonData) {
+    return jsonData.hasOwnProperty('label') && jsonData.hasOwnProperty('url') &&
+        jsonData.hasOwnProperty('slug') && jsonData.hasOwnProperty('current');
+}
+
 module.exports.tables = db;
 module.exports.checks = {
     isPost: isPost,
     isTag: isTag,
-    isUser: isUser
+    isUser: isUser,
+    isNav: isNav
 };

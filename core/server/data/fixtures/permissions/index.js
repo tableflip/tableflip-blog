@@ -1,11 +1,12 @@
 // # Permissions Fixtures
 // Sets up the permissions, and the default permissions_roles relationships
-var when        = require('when'),
-    sequence    = require('when/sequence'),
+var Promise     = require('bluebird'),
+    sequence    = require('../../../utils/sequence'),
     _           = require('lodash'),
     errors      = require('../../../errors'),
     models      = require('../../../models'),
     fixtures    = require('./permissions'),
+    i18n        = require('../../../i18n'),
 
     // private
     logInfo,
@@ -52,16 +53,15 @@ addAllRolesPermissions = function () {
         ops.push(addRolesPermissionsForRole(roleName));
     });
 
-    return when.all(ops);
+    return Promise.all(ops);
 };
-
 
 addAllPermissions = function (options) {
     var ops = [];
-    _.each(fixtures.permissions, function (permissions, object_type) {
+    _.each(fixtures.permissions, function (permissions, objectType) {
         _.each(permissions, function (permission) {
             ops.push(function () {
-                permission.object_type = object_type;
+                permission.object_type = objectType;
                 return models.Permission.add(permission, options);
             });
         });
@@ -72,10 +72,10 @@ addAllPermissions = function (options) {
 
 // ## Populate
 populate = function (options) {
-    logInfo('Populating permissions');
+    logInfo(i18n.t('errors.data.fixtures.populatingPermissions'));
     // ### Ensure all permissions are added
     return addAllPermissions(options).then(function () {
-    // ### Ensure all roles_permissions are added
+        // ### Ensure all roles_permissions are added
         return addAllRolesPermissions();
     });
 };
@@ -86,22 +86,22 @@ populate = function (options) {
 to003 = function (options) {
     var ops = [];
 
-    logInfo('Upgrading permissions');
+    logInfo(i18n.t('errors.data.fixtures.upgradingPermissions'));
 
     // To safely upgrade, we need to clear up the existing permissions and permissions_roles before recreating the new
     // full set of permissions defined as of version 003
-    models.Permissions.forge().fetch().then(function (permissions) {
-        logInfo('Removing old permissions');
+    return models.Permissions.forge().fetch().then(function (permissions) {
+        logInfo(i18n.t('errors.data.fixtures.removingOldPermissions'));
         permissions.each(function (permission) {
             ops.push(permission.related('roles').detach().then(function () {
                 return permission.destroy();
             }));
         });
-    });
 
-    // Now we can perfom the normal populate
-    return when.all(ops).then(function () {
-        return populate(options);
+        // Now we can perform the normal populate
+        return Promise.all(ops).then(function () {
+            return populate(options);
+        });
     });
 };
 

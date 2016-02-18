@@ -1,10 +1,11 @@
 var schema    = require('../schema').tables,
     _         = require('lodash'),
     validator = require('validator'),
-    when      = require('when'),
+    Promise   = require('bluebird'),
     errors    = require('../../errors'),
     config    = require('../../config'),
-    requireTree = require('../../require-tree').readAll,
+    readThemes = require('../../utils/read-themes'),
+    i18n        = require('../../i18n'),
 
     validateSchema,
     validateSettings,
@@ -15,33 +16,36 @@ var schema    = require('../schema').tables,
 
 // Provide a few custom validators
 //
-validator.extend('empty', function (str) {
+validator.extend('empty', function empty(str) {
     return _.isEmpty(str);
 });
 
-validator.extend('notContains', function (str, badString) {
+validator.extend('notContains', function notContains(str, badString) {
     return !_.contains(str, badString);
 });
 
-validator.extend('isEmptyOrURL', function (str) {
-    return (_.isEmpty(str) || validator.isURL(str, { require_protocol: false }));
+validator.extend('isEmptyOrURL', function isEmptyOrURL(str) {
+    return (_.isEmpty(str) || validator.isURL(str, {require_protocol: false}));
 });
 
-// Validation validation against schema attributes
-// values are checked against the validation objects
-// form schema.js
-validateSchema = function (tableName, model) {
+validator.extend('isSlug', function isSlug(str) {
+    return validator.matches(str, /^[a-z0-9\-_]+$/);
+});
+
+// Validation against schema attributes
+// values are checked against the validation objects from schema.js
+validateSchema = function validateSchema(tableName, model) {
     var columns = _.keys(schema[tableName]),
         validationErrors = [];
 
-    _.each(columns, function (columnKey) {
+    _.each(columns, function each(columnKey) {
         var message = '';
 
         // check nullable
         if (model.hasOwnProperty(columnKey) && schema[tableName][columnKey].hasOwnProperty('nullable')
                 && schema[tableName][columnKey].nullable !== true) {
             if (validator.isNull(model[columnKey]) || validator.empty(model[columnKey])) {
-                message = 'Value in [' + tableName + '.' + columnKey + '] cannot be blank.';
+                message = i18n.t('notices.data.validation.index.valueCannotBeBlank', {tableName: tableName, columnKey: columnKey});
                 validationErrors.push(new errors.ValidationError(message, tableName + '.' + columnKey));
             }
         }
@@ -49,23 +53,23 @@ validateSchema = function (tableName, model) {
         // TODO: check if mandatory values should be enforced
         if (model[columnKey] !== null && model[columnKey] !== undefined) {
             // check length
-            if (schema[tableName][columnKey].hasOwnProperty('maxlength')) {
+            if (schema[tableName][columnKey].hasOwnProperty('maxlength')) {
                 if (!validator.isLength(model[columnKey], 0, schema[tableName][columnKey].maxlength)) {
-                    message = 'Value in [' + tableName + '.' + columnKey + '] exceeds maximum length of '
-                        + schema[tableName][columnKey].maxlength + ' characters.';
+                    message = i18n.t('notices.data.validation.index.valueExceedsMaxLength',
+                                     {tableName: tableName, columnKey: columnKey, maxlength: schema[tableName][columnKey].maxlength});
                     validationErrors.push(new errors.ValidationError(message, tableName + '.' + columnKey));
                 }
             }
 
-            //check validations objects
+            // check validations objects
             if (schema[tableName][columnKey].hasOwnProperty('validations')) {
                 validationErrors = validationErrors.concat(validate(model[columnKey], columnKey, schema[tableName][columnKey].validations));
             }
 
-            //check type
+            // check type
             if (schema[tableName][columnKey].hasOwnProperty('type')) {
                 if (schema[tableName][columnKey].type === 'integer' && !validator.isInt(model[columnKey])) {
-                    message = 'Value in [' + tableName + '.' + columnKey + '] is not an integer.';
+                    message = i18n.t('notices.data.validation.index.valueIsNotInteger', {tableName: tableName, columnKey: columnKey});
                     validationErrors.push(new errors.ValidationError(message, tableName + '.' + columnKey));
                 }
             }
@@ -73,16 +77,16 @@ validateSchema = function (tableName, model) {
     });
 
     if (validationErrors.length !== 0) {
-        return when.reject(validationErrors);
+        return Promise.reject(validationErrors);
     }
 
-    return when.resolve();
+    return Promise.resolve();
 };
 
 // Validation for settings
 // settings are checked against the validation objects
 // form default-settings.json
-validateSettings = function (defaultSettings, model) {
+validateSettings = function validateSettings(defaultSettings, model) {
     var values = model.toJSON(),
         validationErrors = [],
         matchingDefault = defaultSettings[values.key];
@@ -92,30 +96,30 @@ validateSettings = function (defaultSettings, model) {
     }
 
     if (validationErrors.length !== 0) {
-        return when.reject(validationErrors);
+        return Promise.reject(validationErrors);
     }
 
-    return when.resolve();
+    return Promise.resolve();
 };
 
-// A Promise that will resolve to an object with a property for each installed theme.
-// This is necessary because certain configuration data is only available while Ghost
-// is running and at times the validations are used when it's not (e.g. tests)
-availableThemes = requireTree(config.paths.themePath);
-
-validateActiveTheme = function (themeName) {
+validateActiveTheme = function validateActiveTheme(themeName) {
     // If Ghost is running and its availableThemes collection exists
     // give it priority.
     if (config.paths.availableThemes && Object.keys(config.paths.availableThemes).length > 0) {
-        availableThemes = when(config.paths.availableThemes);
+        availableThemes = Promise.resolve(config.paths.availableThemes);
     }
 
-    return availableThemes.then(function (themes) {
-        if (!themes.hasOwnProperty(themeName)) {
-            return when.reject(new errors.ValidationError(themeName + ' cannot be activated because it is not currently installed.', 'activeTheme'));
-        }
+    if (!availableThemes) {
+        // A Promise that will resolve to an object with a property for each installed theme.
+        // This is necessary because certain configuration data is only available while Ghost
+        // is running and at times the validations are used when it's not (e.g. tests)
+        availableThemes = readThemes(config.paths.themePath);
+    }
 
-        return when.resolve();
+    return availableThemes.then(function then(themes) {
+        if (!themes.hasOwnProperty(themeName)) {
+            return Promise.reject(new errors.ValidationError(i18n.t('notices.data.validation.index.themeCannotBeActivated', {themeName: themeName}), 'activeTheme'));
+        }
     });
 };
 
@@ -136,10 +140,10 @@ validateActiveTheme = function (themeName) {
 //                                      // not null.
 //
 // available validators: https://github.com/chriso/validator.js#validators
-validate = function (value, key, validations) {
+validate = function validate(value, key, validations) {
     var validationErrors = [];
 
-    _.each(validations, function (validationOptions, validationName) {
+    _.each(validations, function each(validationOptions, validationName) {
         var goodResult = true;
 
         if (_.isBoolean(validationOptions)) {
@@ -153,7 +157,8 @@ validate = function (value, key, validations) {
 
         // equivalent of validator.isSomething(option1, option2)
         if (validator[validationName].apply(validator, validationOptions) !== goodResult) {
-            validationErrors.push(new errors.ValidationError('Validation (' + validationName + ') failed for ' + key, key));
+            validationErrors.push(new errors.ValidationError(i18n.t('notices.data.validation.index.validationFailed',
+                                                                    {validationName: validationName, key: key})));
         }
 
         validationOptions.shift();
@@ -163,6 +168,8 @@ validate = function (value, key, validations) {
 };
 
 module.exports = {
+    validate: validate,
+    validator: validator,
     validateSchema: validateSchema,
     validateSettings: validateSettings,
     validateActiveTheme: validateActiveTheme

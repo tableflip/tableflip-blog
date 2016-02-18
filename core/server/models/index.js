@@ -1,43 +1,69 @@
-var _      = require('lodash'),
-    when   = require('when'),
+/**
+ * Dependencies
+ */
+
+var Promise = require('bluebird'),
+    _ = require('lodash'),
+
+    exports,
     models;
 
-models = {
-    Post: require('./post').Post,
-    User: require('./user').User,
-    Role: require('./role').Role,
-    Permission: require('./permission').Permission,
-    Permissions: require('./permission').Permissions,
-    Settings: require('./settings').Settings,
-    Tag: require('./tag').Tag,
-    Base: require('./base'),
-    App: require('./app').App,
-    AppField: require('./appField').AppField,
-    AppSetting: require('./appSetting').AppSetting,
-    Client: require('./client').Client,
-    Accesstoken: require('./accesstoken').Accesstoken,
-    Refreshtoken: require('./refreshtoken').Refreshtoken,
+/**
+ * Expose all models
+ */
 
-    init: function () {
-        return true;
-    },
-    // ### deleteAllContent
-    // Delete all content from the database (posts, tags, tags_posts)
-    deleteAllContent: function () {
-        var self = this;
+exports = module.exports;
 
-        return self.Post.findAll().then(function (posts) {
-            return when.all(_.map(posts.toJSON(), function (post) {
-                return self.Post.destroy({id: post.id});
+models = [
+    'accesstoken',
+    'app-field',
+    'app-setting',
+    'app',
+    'client-trusted-domain',
+    'client',
+    'permission',
+    'post',
+    'refreshtoken',
+    'role',
+    'settings',
+    'tag',
+    'user'
+];
+
+function init() {
+    exports.Base = require('./base');
+
+    models.forEach(function (name) {
+        _.extend(exports, require('./' + name));
+    });
+
+    return Promise.resolve();
+}
+
+/**
+ * TODO: move to some other place
+ */
+
+// ### deleteAllContent
+// Delete all content from the database (posts, tags, tags_posts)
+exports.deleteAllContent = function deleteAllContent() {
+    var self = this;
+
+    return self.Post.findAll().then(function then(posts) {
+        return Promise.all(_.map(posts.toJSON(), function mapper(post) {
+            return self.Post.destroy({id: post.id});
+        }));
+    }).then(function () {
+        return self.Tag.findAll().then(function then(tags) {
+            return Promise.all(_.map(tags.toJSON(), function mapper(tag) {
+                return self.Tag.destroy({id: tag.id});
             }));
-        }).then(function () {
-            return self.Tag.findAll().then(function (tags) {
-                return when.all(_.map(tags.toJSON(), function (tag) {
-                    return self.Tag.destroy({id: tag.id});
-                }));
-            });
         });
-    }
+    });
 };
 
-module.exports = models;
+/**
+ * Expose `init`
+ */
+
+exports.init = init;
