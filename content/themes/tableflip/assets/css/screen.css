@@ -826,8 +826,8 @@ body.nav-opened .nav {
 
 /* When the navigation is closed and there is no cover image */
 .nav-closed .no-cover .menu-button {
-    border-color: #fff;
-    color: #fff;
+    border-color: #ddd;
+    color: #ddd;
 }
 .nav-closed .no-cover .menu-button:hover {
     border-color: #555;
