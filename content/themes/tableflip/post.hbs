@@ -3,12 +3,21 @@
 {{! The comment above "< default" means - insert everything in this file into
     the {body} of the default.hbs template, which contains our header/footer. }}
 
-<nav class="main-nav clearfix">
-    <a class="back-button icon-arrow-left" href="{{@blog.url}}">Home</a>
-    <a class="subscribe-button icon-feed" href="{{@blog.url}}/rss/">Subscribe</a>
-</nav>
+<header id="header">
+  <div id="logo">
+    <a href="/" title="(╯°□°）╯︵ ┻━┻"><img src="/assets/img/tableflip.min.svg"></a>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#about" title="About"><img src="/assets/img/icon-info.svg"><span>About</span></a></li>
+      <li><a href="#portfolio" title="Portfolio"><img src="/assets/img/icon-briefcase.svg"><span>Portfolio</span></a></li>
+      <li><a href="http://blog.tableflip.io/" title="Blog"><img src="/assets/img/icon-blog.svg"><span>Blog</span></a></li>
+      <li><a href="#contact" title="Contact"><img src="/assets/img/icon-phone.svg"><span>Contact</span></a></li>
+    </ul>
+  </nav>
+</header>
 
-<main class="content" role="main">
+<main id="content" role="main">
 
     <article class="{{post_class}}">
     {{! Everything inside the #post tags pulls data from the post }}

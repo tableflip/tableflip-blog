@@ -467,31 +467,105 @@ margin on the iframe, cause it breaks stuff. */
    ========================================================================== */
 
 /* Big cover image on the home page */
-.main-header {
+main#content {
+  padding-top: 160px;
+}
+#header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+#logo a {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  margin-left: -50px;
+  color: #4A4A4A;
+  text-align: center;
+}
+#logo a::after {
+  font-family: varela_roundregular, sans-serif;
+  position: absolute;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px #000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 1px 5px 0;
+  font-size: 48px;
+  top: 92px;
+  left: -78px;
+  -webkit-transform: rotate(-6deg);
+  transform: rotate(-6deg);
+  transition: all 0.25s ease-out;
+}
+.scrolled #logo a::after {
+  -webkit-transform: rotate(15deg) translate3d(-50px, -200px, 0);
+  transform: rotate(15deg) translate3d(-50px, -200px, 0);
+}
+#logo img {
+  width: 100%;
+  transition: all 0.25s ease-out;
+}
+.scrolled #logo img {
+  -webkit-transform: scale(0.73, 0.73) translate3d(0, -20px, 0);
+  transform: scale(0.73, 0.73) translate3d(0, -20px, 0);
+}
+#header nav {
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 18px 0;
+  transition: box-shadow 0.25s ease-out;
+  background-color: #18C8A0;
+}
+.scrolled #header nav {
+  box-shadow: 0 0 5px #eee;
+}
+#header nav ul {
+  margin: 0;
+  padding: 0 15px;
+}
+#header nav li {
+  display: inline;
+}
+#header nav li:nth-child(3), nav li:nth-child(4) {
+  float: right;
+}
+#header nav a {
+  text-decoration: none;
+  transition: all 0.25s ease-out;
+  padding: 10px;
+  color: white;
+}
+#header nav a * {
+  vertical-align: middle;
+}
+#header nav a:hover {
+}
+#header nav a span {
+  position: fixed;
+  left: -200px;
+}
+#header nav a img {
+  height: 20px;
+}
+@media (min-width: 940px) {
+  #header nav ul {
+    text-align: right;
+  }
+  #header nav li:nth-child(3), nav li:nth-child(4) {
+    float: none;
+  }
+  #header nav a {
+    padding: 15px;
+  }
+  #header nav a span {
     position: relative;
-    display: table;
-    width: 100%;
-    height: 100%;
-    margin-bottom: 5rem;
-    text-align: center;
-    background: #222 no-repeat center center;
-    background-size: cover;
-    overflow: hidden;
-}
-
-.main-header .inner {
-    width: 80%;
-}
-
-.main-nav {
-    position: relative;
-    padding: 35px 40px;
-    margin: 0 0 30px 0;
-}
-
-.main-nav a {
-    text-decoration: none;
-    font-family: 'Open Sans', sans-serif;
+    left: 0;
+    padding: 0 0 0 5px;
+  }
 }
 
 /* Create a bouncing scroll-down arrow on homepage with cover image */

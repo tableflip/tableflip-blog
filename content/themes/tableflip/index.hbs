@@ -1,20 +1,18 @@
 {{!< default}}
 {{! The tag above means - insert everything in this file into the {body} of the default.hbs template }}
 
-{{! The big featured header }}
-<header class="main-header {{#if @blog.cover}}" style="background-image: url({{@blog.cover}}){{else}}no-cover{{/if}}">
-    <nav class="main-nav overlay clearfix">
-        {{#if @blog.logo}}<a class="blog-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="Blog Logo" /></a>{{/if}}
-        <a class="subscribe-button icon-feed" href="{{@blog.url}}/rss/">Subscribe</a>
-    </nav>
-    <div class="vertical">
-        <div class="main-header-content inner">
-            <h1 class="page-title">
-                <a href="http://tableflip.io/"><img src="{{asset "img/logo-tableflip.svg"}}" alt="Blog Logo" /></a>
-            </h1>
-        </div>
-    </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
+<header id="header">
+  <div id="logo">
+    <a href="/" title="(╯°□°）╯︵ ┻━┻"><img src="/assets/img/tableflip.min.svg"></a>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#about" title="About"><img src="/assets/img/icon-info.svg"><span>About</span></a></li>
+      <li><a href="#portfolio" title="Portfolio"><img src="/assets/img/icon-briefcase.svg"><span>Portfolio</span></a></li>
+      <li><a href="http://blog.tableflip.io/" title="Blog"><img src="/assets/img/icon-blog.svg"><span>Blog</span></a></li>
+      <li><a href="#contact" title="Contact"><img src="/assets/img/icon-phone.svg"><span>Contact</span></a></li>
+    </ul>
+  </nav>
 </header>
 
 {{! The main content area on the homepage }}

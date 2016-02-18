@@ -38,6 +38,45 @@
     <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script>
     <script type="text/javascript" src="{{asset "js/index.js"}}"></script>
     <script>
+    (function () {
+      var html = document.getElementsByTagName('html')[0]
+      var scrolled = false
+
+      setTimeout(function () { window.onscroll() })
+
+      function addClass (el, className) {
+        el.className = el.className.split(' ').concat(className).join(' ')
+      }
+
+      function removeClass (el, className) {
+        var classes = el.className.split(' ')
+        el.className = classes.filter(function (c) {
+          return c != className
+        }).join(' ')
+      }
+
+      window.onscroll = function () {
+        if (window.scrollY > 0 && !scrolled) {
+          addClass(html, 'scrolled')
+          scrolled = true
+        } else if (window.scrollY <= 0 && scrolled) {
+          removeClass(html, 'scrolled')
+          scrolled = false
+        }
+      }
+
+      var pieces = document.querySelectorAll('.piece')
+
+      ;[].forEach.call(pieces, function (piece) {
+        piece.addEventListener('click', function (e) {
+          if (piece.className.indexOf('closed') > -1) {
+            piece.className = piece.className.replace('closed', 'open')
+          }
+        })
+      })
+    })()
+    </script>
+    <script>
     (function(w,i,z,a,r,d,y){w['GoogleAnalyticsObject']=r;w[r]=w[r]||function(){
     (w[r].q=w[r].q||[]).push(arguments)},w[r].l=1*new Date();d=i.createElement(z),
     y=i.getElementsByTagName(z)[0];d.async=1;d.src=a;y.parentNode.insertBefore(d,y)
