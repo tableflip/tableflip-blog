@@ -1,0 +1,13 @@
+---
+layout: landing
+---
+<div class='measure center bg-white'>
+  {% for post in site.posts %}
+    <section class="my2">
+      <h1 class="lh-title">
+        <a href="{{ post.url }}" class="no-underline">{{ post.title }}</a>
+      </h1>
+      <p class="f5 lh-copy">{{ post.excerpt }}</p>
+    </section>
+  {% endfor %}
+</div>
