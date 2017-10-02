@@ -16,9 +16,7 @@ As a result, we recommend MeteorHacks [**Flow Router**](https://github.com/meteo
 
 Put the Meteor app itself in a subdirectory of the project root; Meteor's propensity to include everything `.js` within the Meteor project directory in app bundles makes life very easy, but the lack of a `.meteorignore` file or similar means that if you're ever likely to end up with things that you don't want to include, it's nice to have sibling directories in your repo in which to put them. Plus, this allows you to have [**mup**](https://github.com/arunoda/meteor-up) configs, multiple settings files and other assets sensibly organised without polluting your Meteor directory.
 
-On the client side, the structure probably depends to some extent on the rendering engine you're using, but if you're working with FlowLayout/Blaze, then something like this would work nicely:
-
-![Expanded directory tree](/content/images/2015/Jul/meteor_project--2-.png)
+On the client side, the structure probably depends to some extent on the rendering engine you're using.
 
 It's also sensible to create a global app object (probably called `App`) within the **lib** directory root (eg.`app.js`), to which you can attach isomorphic methods or properties that can be accessed on either client or server. Whilst throwing things into the global namespace has its drawbacks, until Meteor has some kind of module system, this is by far the best way to avoid repeating yourself or building apps with enormous individual `.js` files.
 
@@ -205,9 +203,15 @@ One excellent attempt to solve this problem is [**peerlibrary:blaze-components**
 
 For those looking for a simpler alternative, most MVVM-style behaviour can be achieved by harnessing the `get` method from [**aldeed:template-extension**](https://github.com/aldeed/meteor-template-extension) and observing that events still bubble in Blaze.
 
-For example, consider the following component: `{{get myComponentMessage}}`
+For example, consider the following component:
 
-You can render this with `{{> myComponent primaryLabel="foo" secondaryLabel="bar"}}`. But what will the buttons do, and where does it get the component message from?
+&#123;&#123;get myComponentMessage&#125;&#125;
+
+You can render this with
+
+&#123;&#123;> myComponent primaryLabel="foo" secondaryLabel="bar"&#125;&#125;
+
+But what will the buttons do, and where does it get the component message from?
 
 The answer is in the parent template instance (or its parent, etc...). Declaring reactive variables and event handlers at the top level means that the same component can be used for different purposes without the need for a complex structure of bindings or data/callbacks to be passed through the template heirarchy. All we need is the following:
 

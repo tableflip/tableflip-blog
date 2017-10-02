@@ -35,3 +35,6 @@ defaults:
     values:
       layout: "posts"
       published: true
+
+sass:
+    sass_dir: _sass

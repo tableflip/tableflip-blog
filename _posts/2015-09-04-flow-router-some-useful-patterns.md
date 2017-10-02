@@ -126,9 +126,9 @@ It may look a little ominous at first, but all we're doing here is pulling out a
 Having declared our helper, making a list of links in the current group (which could be *public*, *admin*, ...) is as simple as:
 
 ```html
-{{#each groupRoutes}}
-  <a href="{{path}}">{{name}}</a>
-{{/each}}
+&#123;&#123;#each groupRoutes&#125;&#125;
+  <a href="&#123;&#123;path&#125;&#125;">&#123;&#123;name&#125;&#125;</a>
+&#123;&#123;/each&#125;&#125;
 ```
 
 We can put this in our layout template, or in selected sub-templates, but wherever we use it, it will give us a list of links to the routes in our current group.

@@ -1,13 +1,20 @@
 ---
 layout: landing
 ---
-<div class='measure center bg-white'>
+<div>
   {% for post in site.posts %}
-    <section class="my2">
-      <h1 class="lh-title">
-        <a href="{{ post.url }}" class="no-underline">{{ post.title }}</a>
-      </h1>
-      <p class="f5 lh-copy">{{ post.excerpt }}</p>
-    </section>
+    <a href="{{ post.url }}" class="post-card">
+      <section class="mv4 pa3" style="background-color:#FCFCFC;">
+        <h1 class='bb b--silver'>
+          {{ post.title }}
+        </h1>
+        <div style="height: 1rem;">
+          <small class="normal mute relative right-0 f6 fr silver" style="top: -1rem;">
+            {{ post.date | date: "%c" }}
+          </small>
+        </div>
+        {{ post.excerpt }}
+      </section>
+    </a>
   {% endfor %}
 </div>

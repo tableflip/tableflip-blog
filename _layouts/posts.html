@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" / >
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <link rel="icon" href="https://tableflip.io/favicon.ico" />
-    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.8.0/css/tachyons.min.css"/>
-  </head>
-  <body class="sans-serif bg-near-white">
-    <div class='measure center'>
+  {% include head.html %}
+  <body>
+    {% include header.html %}
+    <main class="post-page measure center" role="main">
       <h1 class="lh-title">{{page.title}}</h1>
-      <main class="lh-copy">{{content}}</main>
-      <small>{{page.author}}</small>
-      <a href="{{ site.url }}">back</a>
-    </div>
+      <div class="lh-copy">{{content}}</div>
+      <div><small><a href="https://github.com/{{page.author}}" target="_blank">{{page.author}}</a></small></div>
+    </main>
+    <nav class="flex items-center justify-between pv0" style="margin-top: 12rem;">
+      {% if page.next.url %}
+        <a class="flex-auto pa2 pl4 tl" href="{{page.next.url}}" style="line-height:3rem;">&#8592;  {{page.next.title}}</a>
+      {% endif %}
+      {% if page.previous.url %}
+      <a class="flex-auto pa2 pr4 tr" href="{{page.previous.url}}" style="line-height:3rem;">{{page.previous.title}} &#8594;</a>
+      {% endif %}
+    </nav>
+    {% include footer.html %}
   </body>
 </html>
