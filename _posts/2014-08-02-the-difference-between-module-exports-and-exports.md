@@ -17,7 +17,7 @@ The magic variables you can use in modules - `exports`, `require`, `module`, `__
 
 Initially, `exports` and `module.exports` point at the **same _empty_ object**.
 
-![](/content/images/2014/Aug/initial.svg)
+![](https://ucarecdn.com/af1c810c-72f4-43cb-a0da-fcd67bed2a80/initial.svg)
 
 You can add properties to this object using either `module.exports` or `exports` since they both point to the same object, _it doesn't matter_ which you use.
 
@@ -35,7 +35,7 @@ What this means is that whatever object `module.exports` is assigned to is the o
 
 If you want to export a function from your module and you assign it to `exports` and not `module.exports` then this happens:
 
-![](/content/images/2014/Aug/bad-export.svg)
+![](https://ucarecdn.com/afcf068c-7d36-4ccd-a51c-a4ef6a9d8c1e/badexport.svg)
 
 Ruh roh! Your module will export an empty object, not the function that you probably intended it to export!
 

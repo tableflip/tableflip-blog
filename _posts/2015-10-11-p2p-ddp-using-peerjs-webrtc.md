@@ -18,7 +18,7 @@ About half way through implementing `pdiddy` I realised meteor _clients_ can't p
 
 Given the time constraint, I decided that rather than build a meteor server that worked in a browser it might be a better idea to just proxy to a running meteor server. Allowing me to finish on time and also develop an example app using the tech!
 
-![](/content/images/2015/Oct/1.svg)
+![](https://ucarecdn.com/74057827-c747-4eab-bbe3-df037547ab6f/1.svg)
 
 The [proxy](https://github.com/alanshaw/pdiddy-test/blob/gh-pages/proxy.js) is a simple static HTML and JS app built with React. It uses sockjs and peerjs and will open a socket connection with a meteor server when a p2p connection to it is opened. When the p2p connection is closed, the socket connection is closed. In between, all it does it ferry EJSON traffic between the p2p connection and the websocket connection.
 

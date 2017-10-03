@@ -18,13 +18,13 @@ The workshops are carefully chosen to cover topics that matter right now, and sc
 
 To kick-start the conversations, we've upgraded the LXJS lanyards with DRIIFT powers. Touch your phone to someone's lanyard and you'll swap contact details. Simple as that.
 
-![Your event contacts](/content/images/2014/Jun/P1080415.jpg)
+![Your event contacts](https://ucarecdn.com/2eb1ee4e-847a-4eb8-b42c-fbad2f02ae01/P1080415.jpg)
 
 At a low-level it's all about NFC, digital lanyards, badges, connections, and finding people. Beyond that, it's a catalyst for interaction. That curious first bip and conversation that ensues.
 
 As you complete the workshops you'll get badges to show you've levelled up. They'll appear in the real-time directory showing you who else is about and the topics that interest them.
 
-![Collectable badges](/content/images/2014/Jun/badges.png)
+![Collectable badges](https://ucarecdn.com/6d5db21a-feee-426b-989d-4326422f8549/badges.png)
 
 Use it to find collaborators for your codebase or friends to drink with, it's up to you.
 

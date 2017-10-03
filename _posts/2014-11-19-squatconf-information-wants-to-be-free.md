@@ -6,13 +6,13 @@ author: "olizilla"
 ---
 A free conference of ideas on de-centralisation of services, transparency, crypto and open-source.
 
-[![](/content/images/2014/Nov/Screenshot-2014-11-19-19-39-02.png)](http://squatconf.eu/)
+[![](https://ucarecdn.com/f69cc929-068b-4ad0-8a58-3e1d29e0fc19/Screenshot20141119193902.png)](http://squatconf.eu/)
 
 Held in Hanger 56 in Paris, it was a tech conference without the ceremony or constraints that a big budget show inevitably presents.
 
 Pitched as: _"a zero-cost conference made with love, but a little rougher around the edges."_ it emerged from conversations and spirit of [LXJS](http://2014.lxjs.org/), but choosing a different set of trade-offs.
 
-[![](/content/images/2014/Nov/squatconf-hanger-56-paris.jpg)](https://www.facebook.com/hangar56paris/photos/a.1399789370289400.1073741827.1399092357025768/1435799166688420/?type=1&permPage=1)
+[![](https://ucarecdn.com/7106eba0-799a-4f88-b986-ca9c08cb41ac/squatconfhanger56paris.jpg)](https://www.facebook.com/hangar56paris/photos/a.1399789370289400.1073741827.1399092357025768/1435799166688420/?type=1&permPage=1)
 
 A couple of issues were alluded to by multiple speakers:
 
