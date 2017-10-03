@@ -1,0 +1,48 @@
+$size: 2.5rem;
+
+.avatar {
+  background-position: center center;
+  background-size: cover;
+  display: block;
+  height: $size;
+  width: $size;
+  border-radius: 50%;
+}
+.avatar::after {
+  width: auto;
+  margin-left: $size * 1.25;
+  white-space: nowrap;
+  line-height: $size;
+}
+.avatar-bmordan {
+  @extend .avatar;
+  background-image: url(https://github.com/bmordan.png);
+}
+.avatar-bmordan::after {
+  @extend .avatar::after;
+  content: 'Bernard Mordan';
+}
+.avatar-olizilla {
+  @extend .avatar;
+  background-image: url(https://github.com/olizilla.png);
+}
+.avatar-olizilla::after {
+  @extend .avatar::after;
+  content: 'Oli Evans';
+}
+.avatar-alanshaw {
+  @extend .avatar;
+  background-image: url(https://github.com/alanshaw.png);
+}
+.avatar-alanshaw::after {
+  @extend .avatar::after;
+  content: 'Alan Shaw';
+}
+.avatar-richsilv {
+  @extend .avatar;
+  background-image: url(https://github.com/richsilv.png);
+}
+.avatar-richsilv::after {
+  @extend .avatar::after;
+  content: 'Richard Silverton';
+}

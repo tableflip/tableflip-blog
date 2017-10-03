@@ -143,22 +143,6 @@ nav a span {
 nav a img {
   height: 20px;
 }
-@media (min-width: 940px) {
-  nav ul {
-    text-align: right;
-  }
-  nav li:nth-child(3), nav li:nth-child(4) {
-    float: none;
-  }
-  nav a {
-    padding: 20px;
-  }
-  nav a span {
-    position: relative;
-    left: 0;
-    padding: 0 0 0 5px;
-  }
-}
 main {
   min-height: 1000px;
 }
@@ -190,9 +174,6 @@ footer {
 }
 .nowrap {
   white-space: nowrap;
-}
-body > svg {
-  display: none;
 }
 .svg-icon {
   vertical-align: middle;
@@ -229,5 +210,32 @@ a.post-card:hover {
   color: #4A4A4A;
   h1 {
     color: #18C8A0;
+  }
+}
+.measure-wider {
+  max-width: 48rem;
+}
+.highlight code {
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+footer {
+  height: 6rem;
+  padding: 0 0.5rem;
+}
+@media (min-width: 940px) {
+  nav ul {
+    text-align: right;
+  }
+  nav li:nth-child(3), nav li:nth-child(4) {
+    float: none;
+  }
+  nav a {
+    padding: 20px;
+  }
+  nav a span {
+    position: relative;
+    left: 0;
+    padding: 0 0 0 5px;
   }
 }

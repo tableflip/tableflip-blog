@@ -4,7 +4,7 @@ layout: landing
 <div>
   {% for post in site.posts %}
     <a href="{{ post.url }}" class="post-card">
-      <section class="mv4 pa3" style="background-color:#FCFCFC;">
+      <section class="mt6" style="background-color:#FCFCFC;">
         <h1 class='bb b--silver'>
           {{ post.title }}
         </h1>
@@ -16,5 +16,6 @@ layout: landing
         {{ post.excerpt }}
       </section>
     </a>
+    <a href="https://github.com/{{ post.author }}" target="_blank" class="avatar-{{ post.author }} ml3"></a>
   {% endfor %}
 </div>

@@ -21,10 +21,7 @@ Who are you?
 
 Good question.
 
-<ul id="mugshots">
-    <li><a href="https://github.com/alanshaw"><img src="https://en.gravatar.com/avatar/8ca838dbb449a1359b5a4eadd26abb42"></a></li>
-    <li><a href="https://github.com/olizilla"><img src="https://en.gravatar.com/avatar/1114a99d8da01f890f39c02bd2b1bfc3"></a></li>
-</ul>
+![alanshaw](https://avatars3.githubusercontent.com/u/152863?v=4&s=300) &nbsp;&nbsp;&nbsp;&nbsp; ![olizilla](https://avatars0.githubusercontent.com/u/58871?v=4&s=300)
 
 Alan and Oli. Two freelancers, not unlike Sharky & George, who worked on various web development projects together for some 6 years before joining forces to take over the world. Between them they have some 20 or so years of experience in development and hacking on the web.
 

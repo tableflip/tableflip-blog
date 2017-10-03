@@ -25,7 +25,7 @@
   "scripts": {
     "watch": "docker run -p 4000:4000 --rm --volume=$PWD:/srv/jekyll -it jekyll/jekyll:3.5 jekyll serve",
     "test": "standard",
-    "start": "open _site/index.html"
+    "start": "jekyll serve --watch"
   },
   "dependencies": {},
   "devDependencies": {},
