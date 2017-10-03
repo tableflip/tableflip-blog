@@ -1,7 +1,7 @@
 ---
 title: "tableflip.io now on Dat"
 permalink: "/tableflip-io-now-on-dat"
-date: 2017-01-26 12:21:28 +0000
+date: 2017-09-26 12:21:28 +0000
 author: "alanshaw"
 ---
 Earlier this week we put the TABLEFLIP website on [Dat](https://datproject.org/), so it's now available p2p. If you're using the [Beaker Browser](https://beakerbrowser.com/) you can put [dat://tableflip.io](dat://tableflip.io) in your URL bar and a peer should serve you our website.

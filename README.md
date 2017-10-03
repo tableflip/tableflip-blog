@@ -5,22 +5,17 @@
 - Install jekyll
 
 ```sh
-gem install jekyll bundler
-
+gem install bundler
+bundle install
 ```
 
 https://jekyllrb.com/docs/quickstart/
 
-Note that you may have to install other gems required by jekyll, for example:
-
-```sh
-gem install ffi
-```
 
 - Run the dev server to watch for changes
 
 ```sh
-jekyll serve --watch
+bundle exec jekyll serve --watch
 # Server now running on http://localhost:4000
 ```
 

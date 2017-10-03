@@ -1,7 +1,7 @@
 ---
 title: "TUNE-ing super fast static websites"
 permalink: "/tune-ing-super-fast-static-websites"
-date: 2017-01-26 12:21:28 +0000
+date: 2017-09-26 12:21:28 +0000
 author: "alanshaw"
 ---
 Yep, we did what is generally accepted to be a "bad idea" by many developers and built a static site generator slash CMS for our clients. I don't blame them. Getting it right is really difficult, it's such a mammoth task, and building a concise set of features is dependent on your particular use cases.
