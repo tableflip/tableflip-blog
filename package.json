@@ -13,19 +13,13 @@
   "bugs": {
     "url": "https://github.com/tableflip/tableflip-blog/issues"
   },
-  "config": {
-    "deploy": {
-      "next": "next-blog.tableflip.io",
-      "prod": "blog.tableflip.io"
-    }
-  },
   "pre-commit": [
     "test"
   ],
   "scripts": {
-    "watch": "docker run -p 4000:4000 --rm --volume=$PWD:/srv/jekyll -it jekyll/jekyll:3.5 jekyll serve",
+    "watch": "bundle exec jekyll serve --watch",
     "test": "standard",
-    "start": "jekyll serve --watch"
+    "start": "open _site/index.html"
   },
   "dependencies": {},
   "devDependencies": {},
