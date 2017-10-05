@@ -1,6 +1,6 @@
 ---
 title: "Starting out with React Native"
-permalink: "/the-tableflip-podcast-starting-out-with-react-native"
+permalink: "the-tableflip-podcast-starting-out-with-react-native"
 date: 2016-09-29 13:36:29 +0000
 author: "alanshaw"
 ---

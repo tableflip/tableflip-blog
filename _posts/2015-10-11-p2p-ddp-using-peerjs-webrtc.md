@@ -1,6 +1,6 @@
 ---
 title: "P2P DDP using PeerJS WebRTC"
-permalink: "/p2p-ddp-using-peerjs-webrtc"
+permalink: "p2p-ddp-using-peerjs-webrtc"
 date: 2015-10-11 13:26:13 +0000
 author: "alanshaw"
 ---

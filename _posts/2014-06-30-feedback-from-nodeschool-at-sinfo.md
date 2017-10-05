@@ -1,6 +1,6 @@
 ---
 title: "Feedback from NodeSchool at SINFO"
-permalink: "/feedback-from-nodeschool-at-sinfo"
+permalink: "feedback-from-nodeschool-at-sinfo"
 date: 2014-06-30 13:24:34 +0000
 author: "olizilla"
 ---

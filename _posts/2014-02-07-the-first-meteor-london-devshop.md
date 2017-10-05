@@ -1,6 +1,6 @@
 ---
 title: "The first Meteor London DevShop"
-permalink: "/the-first-meteor-london-devshop"
+permalink: "the-first-meteor-london-devshop"
 date: 2014-02-07 10:15:46 +0000
 author: "olizilla"
 ---

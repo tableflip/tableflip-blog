@@ -1,6 +1,6 @@
 ---
 title: "SquatConf -  Information wants to be free."
-permalink: "/squatconf-information-wants-to-be-free"
+permalink: "squatconf-information-wants-to-be-free"
 date: 2014-11-19 19:35:47 +0000
 author: "olizilla"
 ---

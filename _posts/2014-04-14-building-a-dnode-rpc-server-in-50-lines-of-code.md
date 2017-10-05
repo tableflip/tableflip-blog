@@ -1,6 +1,6 @@
 ---
 title: "Building a dnode rpc server in ~50 lines of code"
-permalink: "/building-a-dnode-rpc-server-in-50-lines-of-code"
+permalink: "building-a-dnode-rpc-server-in-50-lines-of-code"
 date: 2014-04-15 06:47:24 +0000
 author: "alanshaw"
 ---

@@ -1,6 +1,6 @@
 ---
 title: "TUNE-ing super fast static websites"
-permalink: "/tune-ing-super-fast-static-websites"
+permalink: "tune-ing-super-fast-static-websites"
 date: 2017-09-26 12:21:28 +0000
 author: "alanshaw"
 ---
