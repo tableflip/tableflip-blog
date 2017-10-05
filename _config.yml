@@ -16,7 +16,7 @@
 title: TABLEFLIP Blog
 email: hello@tableflip.io
 description: the TABLEFLIP blog musings for everyone
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://blog.tableflip.io" # the base hostname & protocol for your site
 twitter_username: _tableflip
 github_username:  tableflip
@@ -40,3 +40,9 @@ defaults:
 
 sass:
     sass_dir: _sass
+
+assets:
+  autoprefixer:
+    browsers:
+      - "last 2 versions"
+      - "IE > 9"
