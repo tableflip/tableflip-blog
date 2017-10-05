@@ -5,7 +5,7 @@
   {% if page.date %}
     <meta property="og:title" content="{{page.title}}" />
     <meta property="og:site_name" content="{{site.title}}" />
-    <meta property="og:url" content="{{site.url}}{{page.url}}" />
+    <meta property="og:url" content="{{site.url}}{{page.url | relative_url}}" />
     <meta property="og:image" content="https://github.com/tableflip.png" />
     <meta property="og:type" content="article" />
     <meta property="og:description" content="{{page.excerpt | strip_html}}" />
@@ -21,10 +21,10 @@
     <meta name="twitter:description" content="{{page.excerpt | strip_html}}" />
     <meta name="twitter:image" content="https://github.com/tableflip.png" />
   {% endif %}
-  <link rel="icon" href="{{site.url}}/favicon.ico" />
-  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="icon" href="{{site.url | relative_url}}/favicon.ico" />
+  <link rel="stylesheet" href="{{"css/main.css" | relative_url}}"/>
   <link href="http://blog.tableflip.io/feed.xml" rel="alternate" type="application/atom+xml" title="the TABLEFLIP blog">
-  <script src="public/main.js"/>
+  <script src="{{"public/main.js" | relative_url}}"/>
   <script>
     window.intercomSettings = {app_id: "jo2mp0eg"};
   </script>
