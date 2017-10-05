@@ -18,10 +18,10 @@
     </main>
     <nav class="post-nav flex items-center justify-between pv0" style="margin-top: 12rem;">
       {% if page.previous.url %}
-        <a class="flex-auto pa2 pl4 tl" href="{{page.previous.url}}" style="line-height:3rem;">&#8592;<span class="dn di-ns ml1">{{page.previous.title}}</span></a>
+        <a class="flex-auto pa2 pl4 tl" href="{{page.previous.url | relative_url}}" style="line-height:3rem;">&#8592;<span class="dn di-ns ml1">{{page.previous.title}}</span></a>
       {% endif %}
       {% if page.next.url %}
-        <a class="flex-auto pa2 pr4 tr" href="{{page.next.url}}" style="line-height:3rem;"><span class="dn di-ns mr1">{{page.next.title}}</span>&#8594;</a>
+        <a class="flex-auto pa2 pr4 tr" href="{{page.next.url | relative_url}}" style="line-height:3rem;"><span class="dn di-ns mr1">{{page.next.title}}</span>&#8594;</a>
       {% endif %}
     </nav>
     {% include footer.html %}
