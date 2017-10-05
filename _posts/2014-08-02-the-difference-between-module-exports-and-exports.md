@@ -1,6 +1,6 @@
 ---
 title: "The difference between module.exports and exports"
-permalink: "/the-difference-between-module-exports-and-exports"
+permalink: "the-difference-between-module-exports-and-exports"
 date: 2014-08-02 16:00:34 +0000
 author: "alanshaw"
 ---

@@ -1,6 +1,6 @@
 ---
 title: "tableflip.io now on Dat"
-permalink: "/tableflip-io-now-on-dat"
+permalink: "tableflip-io-now-on-dat"
 date: 2017-09-26 12:21:28 +0000
 author: "alanshaw"
 ---

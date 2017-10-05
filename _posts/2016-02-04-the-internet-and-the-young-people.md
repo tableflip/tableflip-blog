@@ -1,6 +1,6 @@
 ---
 title: "The Internet and The Young People"
-permalink: "/the-internet-and-the-young-people"
+permalink: "the-internet-and-the-young-people"
 date: 2016-02-04 17:06:25 +0000
 author: "bmordan"
 ---

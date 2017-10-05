@@ -1,6 +1,6 @@
 ---
 title: "Robot Laws"
-permalink: "/robot-laws"
+permalink: "robot-laws"
 date: 2016-09-29 13:36:29 +0000
 author: "alanshaw"
 ---

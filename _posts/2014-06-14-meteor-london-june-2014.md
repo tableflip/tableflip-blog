@@ -1,6 +1,6 @@
 ---
 title: "Meteor London - June 2014"
-permalink: "/meteor-london-june-2014"
+permalink: "meteor-london-june-2014"
 date: 2014-06-14 16:34:21 +0000
 author: "olizilla"
 ---

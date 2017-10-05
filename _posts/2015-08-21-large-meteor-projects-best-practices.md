@@ -1,6 +1,6 @@
 ---
 title: "Large Meteor projects - best practices"
-permalink: "/large-meteor-projects-best-practices"
+permalink: "large-meteor-projects-best-practices"
 date: 2015-08-21 15:49:25 +0000
 author: "richsilv"
 ---

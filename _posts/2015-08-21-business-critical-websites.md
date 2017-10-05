@@ -1,6 +1,6 @@
 ---
 title: "Business Critical Websites"
-permalink: "/business-critical-websites"
+permalink: "business-critical-websites"
 date: 2015-08-21 16:10:30 +0000
 author: "bmordan"
 ---

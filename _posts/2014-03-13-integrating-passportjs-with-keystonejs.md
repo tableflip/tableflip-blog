@@ -1,6 +1,6 @@
 ---
 title: "Integrating passportjs with keystonejs"
-permalink: "/integrating-passportjs-with-keystonejs"
+permalink: "integrating-passportjs-with-keystonejs"
 date: 2014-03-13 08:01:09 +0000
 author: "alanshaw"
 ---
