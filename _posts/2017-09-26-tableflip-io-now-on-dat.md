@@ -4,7 +4,7 @@ permalink: "tableflip-io-now-on-dat"
 date: 2017-09-26 12:21:28 +0000
 author: "alanshaw"
 ---
-Earlier this week we put the TABLEFLIP website on [Dat](https://datproject.org/), so it's now available p2p. If you're using the [Beaker Browser](https://beakerbrowser.com/) you can put [dat://tableflip.io](dat://tableflip.io) in your URL bar and a peer should serve you our website.
+Earlier this week we put the TABLEFLIP website on [Dat](https://datproject.org/) so it's now available p2p. If you're using the [Beaker Browser](https://beakerbrowser.com/) you can put [dat://tableflip.io](dat://tableflip.io) in your URL bar and a peer should serve you our website.
 
 ["Vanity Dats"](https://github.com/beakerbrowser/beaker/wiki/Authenticated-Dat-URLs-and-HTTPS-to-Dat-Discovery) (I totally just made that name up) are a feature of Beaker rather than Dat but are nevertheless very cool. The current website at the time of writing is [dat://b5f226..33/](dat://b5f2265cca5d5f1c7a2fcec32e8310e8ac41151c9f026afba26cd82f02cdba33/)).
 

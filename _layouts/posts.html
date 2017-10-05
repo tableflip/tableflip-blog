@@ -3,12 +3,12 @@
   {% include head.html page=page %}
   <body>
     {% include header.html %}
-    <main class="measure-wider center post-card pa3" role="main">
+    <main class="measure-wider center post-card no-hover pa3" role="main">
       <h1 class="mv4 pt4">{{page.title}}</h1>
       <div>{{content}}</div>
       <div class='flex justify-between items-end'>
         <div>
-          <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5"></a>
+          <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5 disable-link-styles"></a>
           <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
         </div>
         <div>
