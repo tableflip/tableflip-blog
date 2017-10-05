@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include head.html page=page %}
+  <body>
+    {% include header.html %}
+    <main class="measure-wider center pa3" role="main">
+      <h1 class="mv6 pt5">{{page.title}}</h1>
+      <div>{{content}}</div>
+      <div class='flex justify-between items-end'>
+        <div>
+          <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5"></a>
+          <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
+        </div>
+        <div>
+          {% include socials.html site=site page=page %}
+        </div>
+      </div>
+    </main>
+    <nav class="post-nav flex items-center justify-between pv0" style="margin-top: 12rem;">
+      {% if page.previous.url %}
+        <a class="flex-auto pa2 pl4 tl" href="{{page.previous.url}}" style="line-height:3rem;">&#8592;<span class="dn di-ns ml1">{{page.previous.title}}</span></a>
+      {% endif %}
+      {% if page.next.url %}
+        <a class="flex-auto pa2 pr4 tr" href="{{page.next.url}}" style="line-height:3rem;"><span class="dn di-ns mr1">{{page.next.title}}</span>&#8594;</a>
+      {% endif %}
+    </nav>
+    {% include footer.html %}
+  </body>
+</html>

@@ -1,0 +1,45 @@
+$size: 2.5rem;
+
+.avatar {
+  background-position: center center;
+  background-size: cover;
+  display: block;
+  height: $size;
+  width: $size;
+  border-radius: 50%;
+}
+@mixin after($fullName) {
+  content: $fullName;
+  width: auto;
+  margin-left: $size * 1.25;
+  white-space: nowrap;
+  line-height: $size;
+}
+.avatar-bmordan {
+  @extend .avatar;
+  background-image: url(https://github.com/bmordan.png);
+}
+.avatar-bmordan::after {
+  @include after('Bernard Mordan');
+}
+.avatar-olizilla {
+  @extend .avatar;
+  background-image: url(https://github.com/olizilla.png);
+}
+.avatar-olizilla::after {
+  @include after('Oli Evans');
+}
+.avatar-alanshaw {
+  @extend .avatar;
+  background-image: url(https://github.com/alanshaw.png);
+}
+.avatar-alanshaw::after {
+  @include after('Alan Shaw');
+}
+.avatar-richsilv {
+  @extend .avatar;
+  background-image: url(https://github.com/richsilv.png);
+}
+.avatar-richsilv::after {
+  @include after('Richard Silverton');
+}

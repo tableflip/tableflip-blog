@@ -1,0 +1,251 @@
+:root {
+  --fontStack: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --headerFontStack: 'Biryani', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --brand-primary: #50E3C2;
+}
+
+@import 'svg-encode.scss';
+
+$bg-hex: '<svg width="403" height="708" viewBox="0 0 403 708" xmlns="http://www.w3.org/2000/svg"><title>tesselate</title><g stroke="#FFF" stroke-width="25" fill="none" fill-rule="evenodd"><path d="M201.497 462.835L.803 578.707-200 462.835V230.98L.803 115l200.694 115.98v231.855zM399.997 113.835L200.303 229.707-.5 113.835V-118.02L200.303-234l200.694 115.98-1 231.855z" fill="#FCFCFC"/><path d="M.5 113.835l-200.695 115.872-200.802-115.872V-118.02L-200.195-234 .5-118.02v231.855z" fill-opacity=".01" fill="#000"/><path d="M602.497 462.835L401.803 578.707 201 462.835V230.98L401.803 115l200.694 115.98v231.855z" fill="#FCFCFC"/><path d="M400.497 809.835L199.803 925.707-1 809.835V577.98L199.803 462l200.694 115.98v231.855z" fill="#FCFCFC"/><path d="M.497 809.835l-200.694 115.872L-401 809.835V577.98L-200.197 462 .497 577.98v231.855z" fill-opacity=".01" fill="#000"/></g></svg>';
+
+$hr-table: '<svg width="216" height="30" viewBox="0 0 216 30" xmlns="http://www.w3.org/2000/svg"><title>hr-table</title><g fill="none" fill-rule="evenodd"><path d="M124.5 21.024V9.056c0-.08 0-.16-.04-.24v-.08c-.038-.08-.038-.12-.076-.2 0 0 0-.04-.038-.04a.696.696 0 0 0-.153-.198l-.04-.04c-.037-.04-.113-.08-.152-.12l-.037-.04L108.67.12a.8.8 0 0 0-.84 0L92.534 8.098l-.038.04a.53.53 0 0 0-.153.12l-.038.04c-.038.04-.115.12-.153.2 0 0 0 .04-.038.04-.04.04-.04.12-.077.2v.078c-.038.08-.038.16-.038.24v11.968c0 .558.42.997.956.997.535 0 .956-.438.956-.996V10.652l13.38 6.98v11.37c0 .56.422.998.957.998.535 0 .955-.44.955-.997v-11.37l13.382-6.98v10.37c0 .56.42.998.956.998.535 0 .956-.438.956-.996zm-16.25-5.106L95.096 9.056l13.152-6.862L121.4 9.056l-13.153 6.862z" fill="#DDD"/><path d="M1.5 14h80M134.5 14h80" stroke="#EEE" stroke-width="2" stroke-linecap="round"/></g></svg>';
+
+body {
+  font-family: var(--fontStack);
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 0;
+  padding-top: 6rem;
+  background: #f7f7f7 url(svg-encode($bg-hex));
+  background-size: 10% auto;
+  color: #4A4A4A;
+  letter-spacing: 1px;
+}
+h1, h2 {
+  letter-spacing: 1px;
+  font-weight:bold;
+  line-height: 1.6;
+}
+h1 {
+  font-family: var(--headerFontStack);
+  padding-top:7px; /* fix Biryani's wonky baseline */
+  font-size: 1.6em;
+}
+h2 {
+  font-family: var(--fontStack);
+  margin: 20px 0;
+}
+h1:first-child, p:first-child {
+  margin-top: 0;
+}
+a, a:visited {
+  text-decoration: none;
+  color: #4A4A4A;
+  opacity: 0.9;
+}
+a:hover {
+  opacity: 1;
+  color: var(--brand-primary);
+}
+a:hover p {
+  color: #4A4A4A;
+}
+a[name] {
+  position: relative;
+  top: -30px;
+}
+blockquote {
+  box-sizing: border-box;
+  margin: 1.6em 0;
+  padding: 0 0 0 0.8em;
+  border-left: 0.4em solid var(--brand-primary);
+}
+blockquote p {
+  font-style: normal;
+  font-weight: lighter;
+  letter-spacing:1px;
+  color:black;
+}
+code.highlighter-rouge {
+  border-radius: 3px;
+  background-color: rgba(27,31,35,0.05);
+  padding: 0.2em 0.4em;
+  margin: 0 -0.1em;
+  font-size: 85%;
+}
+.btn, .btn:visited {
+  display: inline-block;
+  font-size: 24px;
+  letter-spacing:1px;
+  text-decoration: none;
+  color: #fff;
+  background: #E74C3C;
+  border: 0;
+  border-bottom: 5px solid #DB4334;
+  border-radius: 2px;
+  box-shadow: 0 0 2px #ccc;
+  padding: 3px 15px;
+  cursor: pointer;
+  transition: box-shadow 0.25s linear;
+}
+.btn:hover {
+  color: #fff;
+  box-shadow: 0 0 5px #DB4334;
+}
+.btn:active {
+  color: #fff;
+  box-shadow: 0 0 4px #444 inset;
+  border: 0;
+  padding: 3px 15px 8px;
+}
+.btn:disabled {
+  opacity: 0.7;
+}
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+#logo a {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  margin-left: -50px;
+  color: #4A4A4A;
+  text-align: center;
+}
+#logo img {
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+}
+.scrolled #logo img {
+  transform: scale(0.73, 0.73) translate3d(0, -20px, 0);
+}
+nav {
+  background: var(--brand-primary);
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 18px 0;
+}
+nav ul {
+  margin: 0;
+  padding: 0 15px;
+}
+nav li {
+  display: inline;
+}
+nav li:nth-child(2) {
+  float: right;
+}
+nav a, nav a:visited {
+  color:white;
+  text-decoration: none;
+  transition: all 0.25s ease-out;
+  padding: 20px;
+}
+nav a .svg-icon {
+  vertical-align: -5px;
+}
+nav a:hover {
+  color:white;
+  box-shadow: inset 0px -4px 0px 0px white;
+  background: rgba(0,0,0,0.02);
+}
+nav a span {
+  position: fixed;
+  left: -200px;
+}
+nav a img {
+  height: 20px;
+}
+main {
+  min-height: 1000px;
+}
+footer {
+  background: #fff;
+  box-shadow: 0 0 5px #eee;
+  text-align: center;
+  color: #ccc;
+  height: 6rem;
+  padding: 0 0.5rem;
+}
+.bg-inverse {
+  color: white;
+  background: var(--brand-primary);
+}
+.text-center {
+  text-align:center;
+}
+.text-muted {
+  color: #BBB;
+}
+.lead {
+  font-weight:bold;
+  font-size: 20px;
+  line-height: 1.6;
+}
+.block {
+  display:block;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.svg-icon {
+  vertical-align: middle;
+  display: inline-block;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin:0 .2rem;
+}
+.svg-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: currentColor;
+}
+hr, .hr-table {
+  border: 0;
+  max-width: 216px;
+  background-position: 50%;
+  box-sizing: border-box;
+  background: url(svg-encode($hr-table)) no-repeat top center;
+  background-size: fit;
+  height:30px;
+  margin: 5rem auto;
+}
+.sticker {
+  height:64px;
+}
+.monospace {
+  font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+.post-card {
+  padding: 1rem;
+  background-color: #FCFCFC;
+  color: #4A4A4A;
+}
+.measure-wider {
+  max-width: 48rem;
+}
+.highlight code {
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+@media (min-width: 940px) {
+  nav ul {
+    text-align: right;
+  }
+  nav li:nth-child(3), nav li:nth-child(4) {
+    float: none;
+  }
+  nav a {
+    padding: 20px;
+  }
+  nav a span {
+    position: relative;
+    left: 0;
+    padding: 0 0 0 5px;
+  }
+}

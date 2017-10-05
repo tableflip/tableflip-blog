@@ -1,0 +1,41 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" / >
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  {% if page.date %}
+    <meta property="og:title" content="{{page.title}}" />
+    <meta property="og:site_name" content="{{site.title}}" />
+    <meta property="og:url" content="{{site.url}}{{page.url}}" />
+    <meta property="og:image" content="https://github.com/tableflip.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{page.excerpt | strip_html}}" />
+    <meta property="article:published_time" content="{{page.date | date_to_xmlschema}}" />
+    <meta property="article:author" content="https://github.com/{{page.author}}" />
+    <meta property="article:section" content="Javascript" />
+    <meta name="description" content="{{page.excerpt | strip_html}}" />
+    <meta name="author" content="https://github.com/{{page.author}}" />
+    <meta name="copyright" content="{{page.date | date_to_xmlschema}}" />
+    <meta name="application-name" content="{{site.title}}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{page.title}}" />
+    <meta name="twitter:description" content="{{page.excerpt | strip_html}}" />
+    <meta name="twitter:image" content="https://github.com/tableflip.png" />
+  {% endif %}
+  <link rel="icon" href="{{site.url}}/favicon.ico" />
+  <link rel="stylesheet" href="css/main.css"/>
+  <link href="http://blog.tableflip.io/feed.xml" rel="alternate" type="application/atom+xml" title="the TABLEFLIP blog">
+  <script src="public/main.js"/>
+  <script>
+    window.intercomSettings = {app_id: "jo2mp0eg"};
+  </script>
+  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic("reattach_activator");ic("update",intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement("script");s.type="text/javascript";s.async=true;s.src="https://widget.intercom.io/widget/jo2mp0eg";var x=d.getElementsByTagName("script")[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent("onload",l);}else{w.addEventListener("load",l,false);}}})()
+  </script>
+  <script>
+    (function(w,i,z,a,r,d,y){w["GoogleAnalyticsObject"]=r;w[r]=w[r]||function(){
+    (w[r].q=w[r].q||[]).push(arguments)},w[r].l=1*new Date();d=i.createElement(z),
+    y=i.getElementsByTagName(z)[0];d.async=1;d.src=a;y.parentNode.insertBefore(d,y)
+    })(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+    ga("create", "UA-52178211-3", "auto");
+    ga("send", "pageview");
+  </script>
+</head>
