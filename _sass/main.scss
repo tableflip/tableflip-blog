@@ -1,13 +1,13 @@
 @import 'svg-encode.scss';
 
-$fontStack: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-$headerFontStack: 'Biryani', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$header-font-stack: 'Biryani', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 $brand-primary: #50E3C2;
 $bg-hex: '<svg width="403" height="708" viewBox="0 0 403 708" xmlns="http://www.w3.org/2000/svg"><title>tesselate</title><g stroke="#FFF" stroke-width="25" fill="none" fill-rule="evenodd"><path d="M201.497 462.835L.803 578.707-200 462.835V230.98L.803 115l200.694 115.98v231.855zM399.997 113.835L200.303 229.707-.5 113.835V-118.02L200.303-234l200.694 115.98-1 231.855z" fill="#FCFCFC"/><path d="M.5 113.835l-200.695 115.872-200.802-115.872V-118.02L-200.195-234 .5-118.02v231.855z" fill-opacity=".01" fill="#000"/><path d="M602.497 462.835L401.803 578.707 201 462.835V230.98L401.803 115l200.694 115.98v231.855z" fill="#FCFCFC"/><path d="M400.497 809.835L199.803 925.707-1 809.835V577.98L199.803 462l200.694 115.98v231.855z" fill="#FCFCFC"/><path d="M.497 809.835l-200.694 115.872L-401 809.835V577.98L-200.197 462 .497 577.98v231.855z" fill-opacity=".01" fill="#000"/></g></svg>';
 $hr-table: '<svg width="216" height="30" viewBox="0 0 216 30" xmlns="http://www.w3.org/2000/svg"><title>hr-table</title><g fill="none" fill-rule="evenodd"><path d="M124.5 21.024V9.056c0-.08 0-.16-.04-.24v-.08c-.038-.08-.038-.12-.076-.2 0 0 0-.04-.038-.04a.696.696 0 0 0-.153-.198l-.04-.04c-.037-.04-.113-.08-.152-.12l-.037-.04L108.67.12a.8.8 0 0 0-.84 0L92.534 8.098l-.038.04a.53.53 0 0 0-.153.12l-.038.04c-.038.04-.115.12-.153.2 0 0 0 .04-.038.04-.04.04-.04.12-.077.2v.078c-.038.08-.038.16-.038.24v11.968c0 .558.42.997.956.997.535 0 .956-.438.956-.996V10.652l13.38 6.98v11.37c0 .56.422.998.957.998.535 0 .955-.44.955-.997v-11.37l13.382-6.98v10.37c0 .56.42.998.956.998.535 0 .956-.438.956-.996zm-16.25-5.106L95.096 9.056l13.152-6.862L121.4 9.056l-13.153 6.862z" fill="#DDD"/><path d="M1.5 14h80M134.5 14h80" stroke="#EEE" stroke-width="2" stroke-linecap="round"/></g></svg>';
 
 body {
-  font-family: $fontStack;
+  font-family: $font-stack;
   font-size: 20px;
   line-height: 1.4;
   margin: 0;
@@ -23,12 +23,12 @@ h1, h2 {
   line-height: 1.6;
 }
 h1 {
-  font-family: $headerFontStack;
+  font-family: $header-font-stack;
   padding-top:7px; /* fix Biryani's wonky baseline */
   font-size: 1.6em;
 }
 h2 {
-  font-family: $fontStack;
+  font-family: $font-stack;
   margin: 20px 0;
 }
 h1:first-child, p:first-child {
