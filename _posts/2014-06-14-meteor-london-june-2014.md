@@ -39,13 +39,13 @@ The comments afterwards summed it up:
 
 ### Lightning Talks
 
-**[@MeteoriteP](https://twitter.com/MeteoriteP)** by **Richard Silverton** - https://github.com/richsilv/meteoritetweeter
+**[@MeteoriteP](https://twitter.com/MeteoriteP)** by **Richard Silverton** - [https://github.com/richsilv/meteoritetweeter](https://github.com/richsilv/meteoritetweeter)
 
 A meteor package tweet-bot, built on meteor! Despite insisting he's not a developer, Richard showed us how simple it is to connect to a remote Meteor powered DDP endpoint, and build new apps on top of them.
 
 ![@MeteoriteP](http://photos3.meetupstatic.com/photos/event/4/0/8/a/highres_374896522.jpeg)
 
-**Orfeo** by **Simon Katan** - https://github.com/kimon-satan/orfeo
+**Orfeo** by **Simon Katan** - [https://github.com/kimon-satan/orfeo](https://github.com/kimon-satan/orfeo)
 
 A work in progress demo of interactive art project to translate the classic text adventure [ZORK](http://en.wikipedia.org/wiki/Zork) into an interactive audio play.
 
@@ -59,7 +59,7 @@ A super slick minimalist itinery tool, for planning a grand day out, collating c
 
 ![http://itinera.re/](http://photos2.meetupstatic.com/photos/event/4/0/b/2/highres_374896562.jpeg)
 
-**Midi Hack!** by **Jon Gold** - https://github.com/jongd/MIDIHack
+**Midi Hack!** by **Jon Gold** - [https://github.com/jongd/MIDIHack](https://github.com/jongd/MIDIHack)
 
 An multi-player audio bop-it game, using Meteor to expose the bleeps of Ableton Live to the assembled-audience orchestra.
 

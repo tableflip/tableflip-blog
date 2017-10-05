@@ -4,11 +4,8 @@ permalink: "/the-internet-and-the-young-people"
 date: 2016-02-04 17:06:25 +0000
 author: "bmordan"
 ---
-## How can we keep our young people safe on-line?
 
-Protecting young people from inappropriate content and activity on-line is no easy task.
-
-Most schools offer a filtered internet, preventing particular classifications of site from being accessed. Many parents also have this kind of filtering on computers at home, or as part of their internet service. But this still doesn't give you any information about what they can access.
+Protecting young people from inappropriate content and activity on-line is no easy task. Most schools offer a filtered internet, preventing particular classifications of site from being accessed. Many parents also have this kind of filtering on computers at home, or as part of their internet service. But this still doesn't give you any information about what they can access.
 
 > Many parents I have spoken to are anxious about what their children are accessing online.
 

@@ -45,6 +45,10 @@ a, a:visited {
 }
 a:hover {
   opacity: 1;
+  color: var(--brand-primary);
+}
+a:hover p {
+  color: #4A4A4A;
 }
 a[name] {
   position: relative;
@@ -61,6 +65,13 @@ blockquote p {
   font-weight: lighter;
   letter-spacing:1px;
   color:black;
+}
+code.highlighter-rouge {
+  border-radius: 3px;
+  background-color: rgba(27,31,35,0.05);
+  padding: 0.2em 0.4em;
+  margin: 0 -0.1em;
+  font-size: 85%;
 }
 .btn, .btn:visited {
   display: inline-block;
@@ -200,8 +211,9 @@ hr, .hr-table {
   background-position: 50%;
   box-sizing: border-box;
   background: url(svg-encode($hr-table)) no-repeat top center;
-  background-size:fit;
+  background-size: fit;
   height:30px;
+  margin: 5rem auto;
 }
 .sticker {
   height:64px;

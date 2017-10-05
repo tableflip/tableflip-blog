@@ -2,7 +2,7 @@
 title: "Test the ideas"
 permalink: "/test-the-ideas"
 date: 2014-01-22 16:16:16 +0000
-author: "olizilla"
+author: "alanshaw"
 ---
 "***Ideas are king, but not all of them are royalty material.***
 

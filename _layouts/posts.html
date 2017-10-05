@@ -4,10 +4,17 @@
   <body>
     {% include header.html %}
     <main class="measure-wider center pa3" role="main">
-      <h1>{{page.title}}</h1>
+      <h1 class="mv6 pt5">{{page.title}}</h1>
       <div>{{content}}</div>
-      <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}}"></a>
-      <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
+      <div class='flex justify-between items-end'>
+        <div>
+          <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5"></a>
+          <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
+        </div>
+        <div>
+          {% include socials.html site=site page=page %}
+        </div>
+      </div>
     </main>
     <nav class="post-nav flex items-center justify-between pv0" style="margin-top: 12rem;">
       {% if page.previous.url %}

@@ -11,7 +11,7 @@ NativeModule.wrapper = [
 '\n});'
 ];
 ```
-https://github.com/joyent/node/blob/832ec1cd507ed344badd2ed97d3da92975650a95/src/node.js#L792-L795
+[https://github.com/joyent](https://github.com/joyent/node/blob/832ec1cd507ed344badd2ed97d3da92975650a95/src/node.js#L792-L795)
 
 The magic variables you can use in modules - `exports`, `require`, `module`, `__filename`, and `__dirname` are not magic, they are just parameters to the function that is invoked when your module is loaded.
 
@@ -21,7 +21,11 @@ Initially, `exports` and `module.exports` point at the **same _empty_ object**.
 
 You can add properties to this object using either `module.exports` or `exports` since they both point to the same object, _it doesn't matter_ which you use.
 
-If you add `exports.foo = "bar"` and `module.exports.baz = "boz"` then your module's exported object will look like: `{foo: "bar", baz: "boz"}`
+If you add `exports.foo = "bar"` and `module.exports.baz = "boz"` then your module's exported object will look like:
+
+```ruby
+{foo: "bar", baz: "boz"}
+```
 
 ...but, what if you want to export a _function_, or a _string_, or a _unicorn_?
 

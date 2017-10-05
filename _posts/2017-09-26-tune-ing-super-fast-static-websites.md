@@ -86,6 +86,6 @@ Let us know if you have any questions about TABS, TARS or TUNE or if you need a 
 
 Here's some sites we've TUNE-d:
 
-http://brandnewweddings.co.uk/
-http://marmalade-productions.co.uk/
-http://rebelandslaughter.com/
+[http://brandnewweddings.co.uk/](http://brandnewweddings.co.uk/)
+[http://marmalade-productions.co.uk/](http://marmalade-productions.co.uk/)
+[http://rebelandslaughter.com/](http://rebelandslaughter.com/)

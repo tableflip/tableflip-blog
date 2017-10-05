@@ -66,7 +66,7 @@ New adventures in database write merging:
 
 We could go web-crypto...
 
--  https://ezcrypt.it/
+- [https://ezcrypt.it/](https://ezcrypt.it/)
 - [`cryptpad`](https://github.com/cjdelisle/cryptpad) -  realtime, collaborative, encrypted editor.
 
 ...but absolute individual privacy is isolating and tends to fail.
@@ -79,7 +79,7 @@ We could go web-crypto...
 
 > "Scope creep in security is paranoia"
 
-Full transcript is available here: https://ezcrypt.it/NeAn#XQ9adFRopErvZW1joW1leSaP
+Full transcript is available here: [https://ezcrypt.it/NeAn#XQ9adFRopErvZW1joW1leSaP](https://ezcrypt.it/NeAn#XQ9adFRopErvZW1joW1leSaP)
 
 ## [@hpk](https://twitter.com/hpk42) - Talk first, hack later.
 
@@ -115,17 +115,17 @@ See: nordic semiconductor NRF51, Intel Edison, RFduino for prototyping.
 <blockquote class="twitter-tweet" lang="en"><p>A note on Beacons. <a href="https://twitter.com/hashtag/squatconf?src=hash">#squatconf</a> <a href="http://t.co/k94i7UgvEe">pic.twitter.com/k94i7UgvEe</a></p>&mdash; Stefan van Hooft (@hooftio) <a href="https://twitter.com/hooftio/status/533614291170394112">November 15, 2014</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-Slides and full transcript here: http://www.slideshare.net/programmarchy/ble-talk
+Slides and full transcript here: [http://www.slideshare.net/programmarchy/ble-talk](http://www.slideshare.net/programmarchy/ble-talk)
 
 ## [Layer Zero Labs](http://l0l.org.uk) - Incredible Edible / Aqua Garden.
 
 **Make it, break it, fix it, hack it, own it.**
 
-They're working on an open-source aquaponics automation system, but really they're working on sharing knowledge and ideas by building things for local communites.
+They're working on an open-source aquaponics automation system, but really they're working on sharing knowledge and ideas by building things for local communities.
 
 **Your help wanted!**
 
-Ended with a fantastic poem, a javascript re-imagining of the heart sutra: http://l0l.org.uk/2014/11/squatconf-presentation/
+Ended with a fantastic poem, a javascript re-imagining of the heart sutra: [http://l0l.org.uk/2014/11/squatconf-presentation/](http://l0l.org.uk/2014/11/squatconf-presentation/)
 
 ## [@harryhalpin](https://twitter.com/harryhalpin) - W3C web crypto standard.
 
@@ -152,7 +152,7 @@ And finally, W3C needs your input, energy and ideas.
 
 ## [LEAP](https://leap.se/en) - encrypted comms for mortals
 
-Crypto should be simple to provide and easy to use. Running your own email server is typically a nightmare. We don't have any excuse for still having unencrypted communications. LEAP is a non-profit, building tools make encryption more approachable. https://leap.se/en/docs/tech/infosec
+Crypto should be simple to provide and easy to use. Running your own email server is typically a nightmare. We don't have any excuse for still having unencrypted communications. LEAP is a non-profit, building tools make encryption more approachable. [https://leap.se/en/docs/tech/infosec](https://leap.se/en/docs/tech/infosec)
 
 Some open projects they're working on:
 

@@ -79,7 +79,7 @@ Hooray! Okay, so this is hardly ground-breaking: we've simply rebuilt Meteor's o
 
 ## Examples
 
-The code and data used in the examples below can all be found at https://github.com/tableflip/raw-collections-example.  The easiest way to run the code is to start up a Meteor server as normal, open *localhost:3000* in your browser, and call the provided methods with `Meteor.call` from the browser console.
+The code and data used in the examples below can all be found at [https://github.com/tableflip/raw-collections-example](https://github.com/tableflip/raw-collections-example).  The easiest way to run the code is to start up a Meteor server as normal, open *localhost:3000* in your browser, and call the provided methods with `Meteor.call` from the browser console.
 
 ### Bulk operations
 

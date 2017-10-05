@@ -4,8 +4,6 @@ permalink: "/business-critical-websites"
 date: 2015-08-21 16:10:30 +0000
 author: "bmordan"
 ---
-**What is critical to your site?**
-
 Here at TABLEFLIP we are in the business of making websites. The business of business for some organisations is becoming more and more intertwined with the internet. So what does that mean for small companies and startups wanting to build an online business?
 
 We have recently delivered the new [School of Wok](https://www.schoolofwok.co.uk) website, a good example of a business whose main revenue source is online purchases. The newly rebuilt site replaces a version that took payment, but lacked a set of business facing management tools. Staff who previously relied on spreadsheets and shared folders to organise themselves, now have a bespoke web-based application to help them administer the business side of the cookery school.
