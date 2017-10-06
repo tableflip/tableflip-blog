@@ -85,7 +85,7 @@ header {
   color: $body-color;
   text-align: center;
 }
-#logo img:not(.shadow-logo) {
+#logo img {
   width: 100%;
   transition: all 0.2s ease-in-out;
 }
