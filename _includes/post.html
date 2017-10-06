@@ -1,0 +1,16 @@
+<div class="post-card mb6">
+  <a href="{{ post.url | relative_url }}" class="disable-link-styles">
+    <section>
+      <h1>
+        {{ post.title }}
+      </h1>
+      <div class="normal f6 o-80 silver" style="height: 1rem; margin-top: -1rem;">
+        {{ post.date | date_to_long_string }}
+      </div>
+      <div style="user-select: none">
+        {{ post.excerpt }}
+      </div>
+    </section>
+  </a>
+  <a href="{{"/authors/" | relative_url}}{{ post.author }}" target="_blank" class="avatar-{{ post.author }} disable-link-styles"></a>
+</div>

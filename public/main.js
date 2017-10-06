@@ -23,5 +23,7 @@ window.onscroll = function () {
 }
 
 document.addEventListener('load', function () {
-  setTimeout(function () { window.onscroll() })
+  setTimeout(function () {
+    window.onscroll()
+  })
 })

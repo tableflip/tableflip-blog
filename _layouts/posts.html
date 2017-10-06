@@ -8,7 +8,7 @@
       <div>{{content}}</div>
       <div class='flex justify-between items-end'>
         <div>
-          <a href="https://github.com/{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5 disable-link-styles"></a>
+          <a href="{{"/authors/" | relative_url}}{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5 disable-link-styles"></a>
           <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
         </div>
         <div>
