@@ -37,6 +37,13 @@ defaults:
     values:
       layout: "posts"
       published: true
+  -
+    scope:
+      path: ''
+      type: authors
+    values:
+      permalink: "authors/:title/"
+      layout: author
 
 sass:
     sass_dir: _sass
@@ -46,3 +53,8 @@ assets:
     browsers:
       - "last 2 versions"
       - "IE > 9"
+
+collections:
+  authors:
+    title: Authors
+    output: true

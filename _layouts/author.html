@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include head.html page=page %}
+  <body>
+    {% include header.html %}
+    <main class="measure-wider center post-card no-hover pa3 mt4" role="main">
+      <section class='tc pb6'>
+        <div>
+          <img src='https://github.com/{{page.github}}.png' width="300" height="300" class="br-100 center db" />
+        </div>
+        {% assign posts = site.posts | where: "author", page.github %}
+        <h1 class='pt0'>{{page.title}}</h1>
+        <div class="pb2">{{page.content}}</div>
+        <div class="o-80">{{ posts | size }} posts</div>
+      </section>
+      <section>
+        {% for post in posts %}
+          {% include post.html %}
+        {% endfor %}
+      </section>
+    </main>
+    {% include footer.html %}
+  </body>
+</html>
