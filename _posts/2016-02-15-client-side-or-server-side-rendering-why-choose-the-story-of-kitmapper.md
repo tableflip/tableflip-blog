@@ -16,7 +16,7 @@ Server side rendering is a bit of an afterthought for single page app frameworks
 
 It started as a [proof of concept](https://github.com/tableflip/dual-page-app) pulling together express.js and page.js since their API's for defining and handling routes are almost exactly same. The idea was that using the middleware pattern that express.js/page.js exposes, we'd split a route handler into two parts. The first part would be responsible for retrieving the data and rendering the page, and the second would initialise the page, for any client side interactions e.g. attach event listeners etc.
 
-```language-javascript
+```js
 // Attach to /post/:id
 dual('/post/:id', render, init)
 
@@ -44,7 +44,7 @@ That was a nice experiment, but it proved to be a little confusing knowing exact
 
 We ended up with a directory structure like this:
 
-```language-shell
+```sh
 .
 ├── [page]           # Page resources
 │   ├── [page].jade  # Template for page
@@ -61,7 +61,7 @@ At the route level, `client.js`/`server.js` are the entry points and look someth
 
 **client.js**
 
-```language-javascript
+```js
 var page = require('page')
 
 var home = require('./home/home')
@@ -75,7 +75,7 @@ page()
 
 **server.js**
 
-```language-javascript
+```js
 var app = require('express')()
 
 var home = require('./home/route')
