@@ -25,7 +25,7 @@ Error handling in Promise chains is something that [has been known](http://javas
 
 More specifically, any time you return a Promise from a Meteor method, you should probably use `catch` method to make sure you're throwing an appropriate error in a sanitized format that will be communicated to the client. An error will still be returned if you don't, but the contents will be a generic *500* in all cases. For example:
 
-```language-javascript
+```js
 Meteor.methods({
   promiseExample () {
     var myPromise = awesomeNodeLibrary.method(params)
@@ -41,7 +41,7 @@ Meteor.methods({
 
 This is not a good use of Promises for anything other than demonstration:
 
-```language-javascript
+```js
 function timesByTwo(n, delay) {
   return new Promise((resolve, reject) => {
     Meteor.setTimeout(() => {

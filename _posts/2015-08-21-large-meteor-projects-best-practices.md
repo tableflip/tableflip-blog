@@ -106,7 +106,7 @@ Consider a collection of users and a collection of movies. Many users can review
 
 The answer is neither; you store them in a separate Reviews collection, and use some simple hooks courtesy of [**matb33:collection-hooks**](https://atmospherejs.com/matb33/collection-hooks) to update the relevant user/movie docs with the review data and associated details (like the reviewer's username and avatar) upon insertion, amendment or deletion. Sure, you're going to end up with big docs, but you don't need to publish the review data when you don't need to, and your collection hooks make it easy to add a field for review metadata, which might be all you need anyway. But where you need that data, you can get it for free by subscribing to the full user object (for the "My Reviews" page) or the full movie object (for the "Movie Details" page).
 
-```language-javascript
+```js
 Reviews = new Mongo.Collection('reviews');
 
 function addOtherData(userId, review) {  
@@ -122,7 +122,7 @@ function addOtherData(userId, review) {
 
 This defines the Reviews collection and a function to annotate new reviews with further data from the Users and Movies collections which we'd rather not have to look up later.
 
-```language-javascript
+```js
 function propagateReview(userId, review, fieldNames) {  
   var updateUser = {},
       updateMovie = {},
@@ -151,7 +151,7 @@ function removeReview(userId, review) {
 
 These functions propagate changes made to the Reviews collection to the appropriate documents in the Users and Reviews collections so that these are available without the client requiring a subscription on the Reviews collection at all.
 
-```language-javascript
+```js
 function updateMetadata(movieId) {  
   // this would be better added as a method on documents in the Movies
   // collection via a transform when the collection is declared, but this works
@@ -166,7 +166,7 @@ function updateMetadata(movieId) {
 
 This function, called by the previous two, attaches further metadata based on information from the Reviews collection - in this case, the average review rating.
 
-```language-javascript
+```js
 Reviews.before.insert(addOtherData);  
 Reviews.after.insert(propagateReview);  
 Reviews.after.update(propagateReview);  
@@ -215,7 +215,7 @@ But what will the buttons do, and where does it get the component message from?
 
 The answer is in the parent template instance (or its parent, etc...). Declaring reactive variables and event handlers at the top level means that the same component can be used for different purposes without the need for a complex structure of bindings or data/callbacks to be passed through the template heirarchy. All we need is the following:
 
-```language-javascript
+```js
 Template.PageOne.onCreated(function() {  
     this.myComponentMessage = new ReactiveVar("Page One Component");
 });
@@ -236,7 +236,7 @@ The events will automatically bubble upwards until they find a handler in the pa
 
 This package contains a [variety of methods](https://github.com/aldeed/meteor-template-extension) for working with template instances, the most useful of which is `get`, which searches the current instance and then its parents in turn until it find the property in question. That's exactly the behaviour we're looking for, but we still need to put it into a global template helper to allow us to use it from within the template.
 
-```language-javascript
+```js
 Template.registerHelper('get', function(key) {  
     var valObj = Template.instance().get(key);
     return valObj instanceof ReactiveVar ? valObj.get() : valObj;
@@ -267,7 +267,7 @@ Like primitive-valued fields, object-valued fields need to be fully specified un
 
 #### last updated (including created)
 
-```language-javascript
+```js
 autoValue: function() {  
   return new Date();
 }
@@ -275,7 +275,7 @@ autoValue: function() {
 
 #### notes (update "note" to populate the "notes" field)
 
-```language-javascript
+```js
 note: {  
   type: String,
   optional: true
@@ -309,7 +309,7 @@ notes: {
 
 #### Convert Markdown to HTML
 
-```language-javascript
+```js
 var converter = new Showdown.converter();
 
 mySchema = new SimpleSchema({  
