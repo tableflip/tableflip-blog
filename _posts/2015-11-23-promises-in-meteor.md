@@ -1,6 +1,6 @@
 ---
 title: "Promises in Meteor"
-permalink: "promises-in-meteor"
+permalink: "promises-in-meteor/"
 date: 2015-11-23 22:05:17 +0000
 author: "richsilv"
 ---

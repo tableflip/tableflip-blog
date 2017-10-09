@@ -1,6 +1,6 @@
 ---
 title: "Node streams are hard"
-permalink: "node-streams-are-hard"
+permalink: "node-streams-are-hard/"
 date: 2014-01-22 16:16:16 +0000
 author: "alanshaw"
 ---

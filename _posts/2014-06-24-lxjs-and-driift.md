@@ -1,6 +1,6 @@
 ---
 title: "LXJS and DRIIFT"
-permalink: "lxjs-and-driift"
+permalink: "lxjs-and-driift/"
 date: 2014-06-24 10:28:43 +0000
 author: "olizilla"
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Function parameters"
-permalink: "function-parameters"
+permalink: "function-parameters/"
 date: 2015-01-06 11:12:37 +0000
 author: "alanshaw"
 ---

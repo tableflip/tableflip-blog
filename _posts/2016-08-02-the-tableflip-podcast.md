@@ -1,6 +1,6 @@
 ---
 title: "The TABLEFLIP podcast - Spacer Wars"
-permalink: "the-tableflip-podcast"
+permalink: "the-tableflip-podcast/"
 date: 2016-08-02 13:18:00 +0000
 author: "olizilla"
 ---

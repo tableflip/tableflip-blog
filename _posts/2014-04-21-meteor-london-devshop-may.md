@@ -1,6 +1,6 @@
 ---
 title: "Meteor London Devshop - May"
-permalink: "meteor-london-devshop-may"
+permalink: "meteor-london-devshop-may/"
 date: 2014-05-21 09:09:48 +0000
 author: "olizilla"
 ---

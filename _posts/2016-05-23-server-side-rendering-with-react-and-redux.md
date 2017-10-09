@@ -1,6 +1,6 @@
 ---
 title: "Server Side Rendering with React and Redux"
-permalink: "server-side-rendering-with-react-and-redux"
+permalink: "server-side-rendering-with-react-and-redux/"
 date: 2016-05-23 13:02:59 +0000
 author: "alanshaw"
 ---

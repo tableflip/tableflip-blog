@@ -1,6 +1,6 @@
 ---
 title: "Flow Router - some useful patterns"
-permalink: "flow-router-some-useful-patterns"
+permalink: "flow-router-some-useful-patterns/"
 date: 2015-09-04 15:51:55 +0000
 author: "richsilv"
 ---

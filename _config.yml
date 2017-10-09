@@ -58,3 +58,6 @@ collections:
   author:
     output: true
     permalink: /author/:slug
+
+exclude: ["Gemfile", "Gemfile.lock", "LICENSE", "README.md", "package.json"]
+include: [".well-known", ".datignore"]

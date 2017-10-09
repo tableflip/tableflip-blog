@@ -1,6 +1,6 @@
 ---
 title: "Client-side or server-side rendering, why choose? The story of KitMapper"
-permalink: "client-side-or-server-side-rendering-why-choose-the-story-of-kitmapper"
+permalink: "client-side-or-server-side-rendering-why-choose-the-story-of-kitmapper/"
 date: 2016-02-15 17:27:57 +0000
 author: "alanshaw"
 ---

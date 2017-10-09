@@ -1,6 +1,6 @@
 ---
 title: "Make your collections roar!"
-permalink: "making-your-collections-roar"
+permalink: "making-your-collections-roar/"
 date: 2016-08-02 13:18:00 +0000
 author: "richsilv"
 ---

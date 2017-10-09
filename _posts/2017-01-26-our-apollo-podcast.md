@@ -1,6 +1,6 @@
 ---
 title: "Apollo Podcast"
-permalink: "our-apollo-podcast"
+permalink: "our-apollo-podcast/"
 date: 2017-01-26 10:23:06 +0000
 author: "bmordan"
 ---

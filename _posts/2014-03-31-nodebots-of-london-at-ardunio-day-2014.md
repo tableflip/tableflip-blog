@@ -1,6 +1,6 @@
 ---
 title: "Nodebots of London at Arduino Day 2014"
-permalink: "nodebots-of-london-at-ardunio-day-2014"
+permalink: "nodebots-of-london-at-ardunio-day-2014/"
 date: 2014-03-31 12:06:21 +0000
 author: "alanshaw"
 ---
