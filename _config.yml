@@ -40,9 +40,9 @@ defaults:
   -
     scope:
       path: ''
-      type: authors
+      type: author
     values:
-      permalink: "authors/:title/"
+      permalink: "author/:slug/"
       layout: author
 
 sass:
@@ -55,6 +55,6 @@ assets:
       - "IE > 9"
 
 collections:
-  authors:
-    title: Authors
+  author:
     output: true
+    permalink: /author/:slug

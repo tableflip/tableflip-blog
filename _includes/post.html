@@ -12,5 +12,5 @@
       </div>
     </section>
   </a>
-  <a href="{{"/authors/" | relative_url}}{{ post.author }}" target="_blank" class="avatar-{{ post.author }} disable-link-styles"></a>
+  {% include author.html github=post.author %}
 </div>
