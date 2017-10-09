@@ -7,8 +7,8 @@
       <h1 class="mv4 pt6">{{page.title}}</h1>
       <div>{{content}}</div>
       <div class='flex justify-between items-end'>
-        <div>
-          <a href="{{"/authors/" | relative_url}}{{page.author}}" target="_blank" class="avatar-{{page.author}} mt5 disable-link-styles"></a>
+        <div class='pt4'>
+          {% include author.html github=page.author %}
           <div class="f6 mute mt2">{{page.date | date_to_long_string}}</div>
         </div>
         <div>

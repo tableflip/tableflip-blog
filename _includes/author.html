@@ -1,0 +1,4 @@
+{% assign author = site.author | where: "github", include.github %}
+{% for auth in author %}
+  <a href="{{"/author/" | relative_url}}{{ auth.slug }}" target="_blank" class="avatar-{{ auth.github }} disable-link-styles"></a>
+{% endfor %}

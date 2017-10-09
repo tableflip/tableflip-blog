@@ -4,9 +4,9 @@
   <body>
     {% include header.html %}
     <main class="measure-wider center post-card no-hover pa3 mt4" role="main">
-      <section class='tc pb6'>
+      <section class='tc pb4'>
         <div>
-          <img src='https://github.com/{{page.github}}.png' width="300" height="300" class="br-100 center db" />
+          <img src='https://github.com/{{page.github}}.png' width="200" height="200" class="br-100 center db" />
         </div>
         {% assign posts = site.posts | where: "author", page.github %}
         <h1 class='pt0'>{{page.title}}</h1>
