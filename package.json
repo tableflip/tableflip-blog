@@ -19,7 +19,8 @@
   "scripts": {
     "watch": "bundle exec jekyll serve --watch",
     "test": "standard",
-    "start": "bundle exec jekyll build && open _site/index.html"
+    "start": "bundle exec jekyll build && open _site/index.html",
+    "deploy": "cd _site && now . --static"
   },
   "dependencies": {},
   "devDependencies": {},

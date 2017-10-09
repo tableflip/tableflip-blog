@@ -77,3 +77,30 @@ Be mindful to use the `relative_url` template helper to make sure links work on 
 ```html
 <a href="{{"/images/cats.jpg" | relative_url}}">Cats</a>
 ```
+
+## Deploy https
+
+A 2 step process. Push to now.sh, then update the alias.
+
+```sh
+npm run deploy
+
+> Deploying ~/Code/tableflip/tableflip-blog/_site under tableflip
+> Ready! https://tableflip-blog-xufavphepp.now.sh (copied to clipboard) [2s]
+```
+
+Take a look at the new deployment and check it looks like you thought it would, Then update the alias to make it live.
+
+```sh
+now alias https://tableflip-blog-xufavphepp.now.sh blog.tablelip.io
+```
+
+This works because we've already updated the dns records to cname blog to `alias.now.sh`.
+
+## Deploy dat
+
+Update either update the existing dat repo, or create a new one and update the hash in `.well-known/dat`
+
+See: https://handbook.protozoa.nz/experiments/p2p_github_pages.html
+
+This works because dat is magic.
