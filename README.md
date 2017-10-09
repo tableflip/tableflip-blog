@@ -33,12 +33,14 @@ author: "alanshaw"
 You post maddness goes in here as *markdown*
 ```
 
-`title` the title of your post this is included in the open graph tagging
-`permalink` basically a slug version of your post title or any url friendly string
-`data` please stick to this format to benefit from Jekylls in-built ordering of posts and template date formatter helpers
-`author` must be your github username to benefit from auto avatar and other links to your github account
+|property|description|
+|:---|:---|
+`title`|the title of your post this is included in the open graph tagging
+`permalink`|a slug version of your post title, or any url friendly string
+`date`|please stick to this format to benefit from Jekyll's built-in ordering of posts and template date formatter helpers
+`author`|must be your github username to benefit from auto avatar fetching and links to your github account
 
-Your first paragraph is considered your 'summary' and will appear in the index of the posts on the home page and as the description field in that post's open graph tags.
+The first paragraph of a post is extracted as your 'summary'. This will appear in the index of the posts on the home page and your author page.
 
 Each post has a set of basic meta data populating the `<head>` drawn from your post's frontmatter:
 
